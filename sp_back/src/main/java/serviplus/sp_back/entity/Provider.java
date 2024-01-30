@@ -1,7 +1,5 @@
 package serviplus.sp_back.entity;
 
-import java.util.Locale.Category;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;

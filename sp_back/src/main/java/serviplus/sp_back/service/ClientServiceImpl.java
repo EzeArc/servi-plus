@@ -3,6 +3,7 @@ package serviplus.sp_back.service;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -59,6 +60,7 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public Client deleteClient(Long id) {
         Client ClientDB = getClient(id);
         if (ClientDB == null) {
@@ -75,7 +77,7 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     public UserDetails loadUserByMail(String mail) throws UsernameNotFoundException {
-        Client clientDB = clientRepository.findByMail(mail);
+        Client clientDB = clientRepository.findByMail(mail).orElse(null);
         if (clientDB == null) {
             throw new UsernameNotFoundException("Usuario no encontrado con email: " + mail);
         }

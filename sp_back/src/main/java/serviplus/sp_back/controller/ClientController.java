@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(value = "http://localhost:4321/user")
-public class UserController {
+public class ClientController {
 
     @Autowired
     private ClientServiceImpl clientServiceImpl;

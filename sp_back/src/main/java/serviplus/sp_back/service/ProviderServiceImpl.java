@@ -3,7 +3,6 @@ package serviplus.sp_back.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +38,7 @@ public class ProviderServiceImpl implements IProviderService {
         }
         providerDB.setName(providerReceived.getName());
         providerDB.setMail(providerReceived.getMail());
-        providerDB.setAddres(providerReceived.getAddres());
+        providerDB.setAddress(providerReceived.getAddress());
         providerDB.setPhone(providerReceived.getPhone());
         providerDB.setImage(providerReceived.getImage());
         providerDB.setPassword(passwordEncoder.encode(providerReceived.getPassword()));
@@ -48,15 +47,15 @@ public class ProviderServiceImpl implements IProviderService {
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
-    public Provider deleteProvider(Long id) {
-        Provider providerDB = getProvider(id);
+    public Provider updateProviderStatus(Long id) {
+        Provider providerDB = getProvider(id); 
         if (providerDB == null) {
             return null;
-        }
+        }   
         providerDB.setState(true);
         return providerRepository.save(providerDB);
     }
+    
 
     @Override
     public Long countBy() {

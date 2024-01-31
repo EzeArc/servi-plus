@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.var;
+import serviplus.sp_back.entity.Admin;
 import serviplus.sp_back.entity.Client;
 import serviplus.sp_back.entity.Provider;
 import serviplus.sp_back.enums.Role;
 import serviplus.sp_back.jwt.JwtService;
+import serviplus.sp_back.repository.AdminRepository;
 import serviplus.sp_back.repository.ClientRepository;
 import serviplus.sp_back.repository.ProviderRepository;
 
@@ -20,17 +22,34 @@ import serviplus.sp_back.repository.ProviderRepository;
 public class AuthenticationServiceImpl implements IAuthenticationService {
 
     private final ClientRepository clientRepository;
+    private final AdminRepository adminRepository;
     private final ProviderRepository providerRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
     @Override
+    public AuthResponse registerAdmin(Admin adminRequest) {
+        Admin adminRegister =new Admin();
+                adminRegister.setName(adminRequest.getName());
+                adminRegister.setMail(adminRequest.getMail());
+                adminRegister.setAddress(adminRequest.getAddress());
+                adminRegister.setPhone(adminRequest.getPhone());
+                adminRegister.setState(false);
+                adminRegister.setPassword(passwordEncoder.encode(adminRequest.getPassword()));
+                adminRegister.setRol(Role.ADMIN);
+
+        adminRepository.save(adminRegister);
+        var jwtToken = jwtService.generateToken(adminRegister);
+        return AuthResponse.builder().token(jwtToken).build();
+    }
+
+    @Override
     public AuthResponse registerClient(Client clientRequest) {
         Client clientRegister = Client.builder()
                 .name(clientRequest.getName())
                 .mail(clientRequest.getMail())
-                .addres(clientRequest.getAddres())
+                .address(clientRequest.getAddress())
                 .phone(clientRequest.getPhone())
                 .state(false)
                 .password(passwordEncoder.encode(clientRequest.getPassword()))
@@ -47,7 +66,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         Provider providerRegister = new Provider();
                 providerRegister.setName(providerRequest.getName());
                 providerRegister.setMail(providerRequest.getMail());
-                providerRegister.setAddres(providerRequest.getAddres());
+                providerRegister.setAddress(providerRequest.getAddress());
                 providerRegister.setPhone(providerRequest.getPhone());
                 providerRegister.setCategory(providerRequest.getCategory());
                 providerRegister.setSalary(providerRequest.getSalary());

@@ -13,6 +13,6 @@ public interface IClientService {
 
     public Client updateClient(Client clientDB, Client clientReceived);
 
-    public Client deleteClient(Long id);
+    public Client updateClientStatus(Long id);
 
 }

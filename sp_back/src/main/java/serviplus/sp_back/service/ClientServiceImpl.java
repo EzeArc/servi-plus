@@ -2,7 +2,6 @@ package serviplus.sp_back.service;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +42,7 @@ public class ClientServiceImpl implements IClientService {
         // Actualiza los campos del cliente de la base de datos con los datos recibidos
         clientDB.setName(clientReceived.getName());
         clientDB.setMail(clientReceived.getMail());
-        clientDB.setAddres(clientReceived.getAddres());
+        clientDB.setAddress(clientReceived.getAddress());
         clientDB.setPhone(clientReceived.getPhone());
         clientDB.setImage(clientReceived.getImage());
         clientDB.setPassword(passwordEncoder.encode(clientReceived.getPassword()));
@@ -54,14 +53,13 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
-    public Client deleteClient(Long id) {
-        Client ClientDB = getClient(id);
-        if (ClientDB == null) {
+    public Client updateClientStatus(Long id) {
+        Client clientDB = getClient(id);
+        if (clientDB == null) {
             return null;
         }
-        ClientDB.setState(true);
-        return clientRepository.save(ClientDB);
+        clientDB.setState(true);
+        return clientRepository.save(clientDB);
     }
 
     @Override

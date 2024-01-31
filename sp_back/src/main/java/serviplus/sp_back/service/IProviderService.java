@@ -14,5 +14,5 @@ public interface IProviderService {
 
     public Provider updateProvider(Provider providerDB, Provider providerReceived);
 
-    public Provider deleteProvider(Long id);
+    public Provider updateProviderStatus(Long id);
 }

@@ -41,8 +41,8 @@ public class Client implements UserDetails {
     private Long id;
     @NotBlank(message = "Name is requiered")
     private String name;
-    @NotBlank(message = "Addres is requiered")
-    private String addres;
+    @NotBlank(message = "Address is requiered")
+    private String address;
     @NotBlank(message = "Phone is requiered")
     private String phone;
     @Column(nullable = false)

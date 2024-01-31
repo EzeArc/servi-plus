@@ -11,5 +11,6 @@ import serviplus.sp_back.entity.Client;
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
     public Long countBy();
+
     Optional<Client> findByMail(String mail);
 }

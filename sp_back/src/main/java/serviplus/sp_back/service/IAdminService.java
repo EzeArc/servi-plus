@@ -13,7 +13,7 @@ public interface IAdminService {
 
     public Admin createAdmin(Admin admin);
 
-    public Admin updateAdmin(Admin admin);
+    public Admin updateAdmin(Admin adminDB, Admin adminReceived);
 
     public Admin deleteAdmin(Long id);
 }

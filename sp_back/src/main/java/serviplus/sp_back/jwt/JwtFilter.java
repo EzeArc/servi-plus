@@ -1,4 +1,4 @@
-package serviplus.sp_back.config;
+package serviplus.sp_back.jwt;
 
 import java.io.IOException;
 
@@ -48,5 +48,13 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
+
+    // private String getTokenFromRequest(HttpServletRequest request){
+    //     final String authHeader= request.getHeader(HttpHeaders.AUTHORIZATION);
+    //     if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
+    //         return authHeader.substring(7);
+    //     }
+    //     return null;
+    // }
 
 }

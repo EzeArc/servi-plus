@@ -1,26 +1,21 @@
 package serviplus.sp_back.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import serviplus.sp_back.entity.Client;
 import serviplus.sp_back.repository.ClientRepository;
 
 @Service
+@RequiredArgsConstructor
 public class ClientServiceImpl implements IClientService {
 
+    private final PasswordEncoder passwordEncoder;
+    
     @Autowired
     private ClientRepository clientRepository;
 
@@ -37,37 +32,34 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     @Transactional
-    public Client createClient(Client client) {
-        client.setState(false);
-        return clientRepository.save(client);
-    }
-
-    @Override
-    @Transactional
-    public Client updateClient(Client client) {
-        Client clientDB = getClient(client.getId());
+    public Client updateClient(Client clientDB, Client clientReceived) {
+        // Verifica nuevamente si el cliente existe, aunque debería haberse comprobado
+        // en el controlador
         if (clientDB == null) {
-            return null;
+            return null; // O lanza una excepción si lo prefieres
         }
-        clientDB.setName(client.getName());
-        clientDB.setMail(client.getMail());
-        clientDB.setAddres(client.getAddres());
-        clientDB.setPhone(client.getPhone());
-        clientDB.setImage(client.getImage());
-        clientDB.setPassword(client.getPassword());
+
+        // Actualiza los campos del cliente de la base de datos con los datos recibidos
+        clientDB.setName(clientReceived.getName());
+        clientDB.setMail(clientReceived.getMail());
+        clientDB.setAddress(clientReceived.getAddress());
+        clientDB.setPhone(clientReceived.getPhone());
+        clientDB.setImage(clientReceived.getImage());
+        clientDB.setPassword(passwordEncoder.encode(clientReceived.getPassword()));
+
+        // Guarda el cliente actualizado en la base de datos
         return clientRepository.save(clientDB);
     }
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
-    public Client deleteClient(Long id) {
-        Client ClientDB = getClient(id);
-        if (ClientDB == null) {
+    public Client updateClientStatus(Long id) {
+        Client clientDB = getClient(id);
+        if (clientDB == null) {
             return null;
         }
-        ClientDB.setState(true);
-        return clientRepository.save(ClientDB);
+        clientDB.setState(true);
+        return clientRepository.save(clientDB);
     }
 
     @Override
@@ -75,18 +67,4 @@ public class ClientServiceImpl implements IClientService {
         return clientRepository.countBy();
     }
 
-    @Override
-    public UserDetails loadUserByMail(String mail) throws UsernameNotFoundException {
-        Client clientDB = clientRepository.findByMail(mail).orElse(null);
-        if (clientDB == null) {
-            throw new UsernameNotFoundException("Usuario no encontrado con email: " + mail);
-        }
-        List<GrantedAuthority> permission = new ArrayList<>();
-        GrantedAuthority clientPermission = new SimpleGrantedAuthority("ROLE_" + clientDB.getRol().toString());
-        permission.add(clientPermission);
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        HttpSession session = attr.getRequest().getSession(true);
-        session.setAttribute("clientSession", clientDB);
-        return new User(clientDB.getMail(), clientDB.getPassword(), permission);
-    }
 }

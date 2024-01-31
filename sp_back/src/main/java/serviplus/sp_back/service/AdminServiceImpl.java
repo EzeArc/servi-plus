@@ -3,10 +3,11 @@ package serviplus.sp_back.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import serviplus.sp_back.entity.Admin;
 import serviplus.sp_back.entity.Client;
 import serviplus.sp_back.enums.Role;
@@ -14,7 +15,10 @@ import serviplus.sp_back.repository.AdminRepository;
 import serviplus.sp_back.repository.ClientRepository;
 
 @Service
+@RequiredArgsConstructor
 public class AdminServiceImpl implements IAdminService {
+
+    private final PasswordEncoder passwordEncoder;
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
@@ -26,13 +30,11 @@ public class AdminServiceImpl implements IAdminService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     public List<Admin> listAllAdmin() {
         return adminRepository.findAll();
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public Admin createAdmin(Admin admin) {
         return adminRepository.save(admin);
@@ -40,23 +42,27 @@ public class AdminServiceImpl implements IAdminService {
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
-    public Admin updateAdmin(Admin admin) {
-        Admin adminDB = getAdmin(admin.getId());
+    public Admin updateAdmin(Admin adminDB, Admin adminReceived) {
+        // Verifica nuevamente si el cliente existe, aunque debería haberse comprobado
+        // en el controlador
         if (adminDB == null) {
-            return null;
+            return null; // O lanza una excepción si lo prefieres
         }
-        adminDB.setName(admin.getName());
-        adminDB.setMail(admin.getMail());
-        adminDB.setAddres(admin.getAddres());
-        adminDB.setPhone(admin.getPhone());
-        adminDB.setImage(admin.getImage());
-        adminDB.setPassword(admin.getPassword());
-        return adminRepository.save(adminDB);
+
+        // Actualiza los campos del cliente de la base de datos con los datos recibidos
+        adminDB.setName(adminReceived.getName());
+        adminDB.setMail(adminReceived.getMail());
+        adminDB.setAddress(adminReceived.getAddress());
+        adminDB.setPhone(adminReceived.getPhone());
+        adminDB.setImage(adminReceived.getImage());
+        adminDB.setPassword(passwordEncoder.encode(adminReceived.getPassword()));
+
+        // Guarda el cliente actualizado en la base de datos
+        return clientRepository.save(adminDB);
     }
 
+
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public Admin deleteAdmin(Long id) {
         Admin adminDB = getAdmin(id);
@@ -68,7 +74,6 @@ public class AdminServiceImpl implements IAdminService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public Admin changeRoleToAdmin(Long id) {
         Client clientDB = clientRepository.findById(id).orElse(null);

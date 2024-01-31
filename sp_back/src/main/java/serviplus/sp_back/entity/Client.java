@@ -17,6 +17,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -31,6 +33,7 @@ import serviplus.sp_back.enums.Role;
 @NoArgsConstructor
 @Builder
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = {"mail"})})
 public class Client implements UserDetails {
 
     @Id
@@ -42,8 +45,7 @@ public class Client implements UserDetails {
     private String addres;
     @NotBlank(message = "Phone is requiered")
     private String phone;
-    @NotBlank(message = "Mail is requiered")
-    @Column(unique = true)
+    @Column(nullable = false)
     private String mail;
     @Size(min = 4)
     private String password;

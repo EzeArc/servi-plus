@@ -4,13 +4,19 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
 import serviplus.sp_back.entity.Provider;
 import serviplus.sp_back.repository.ProviderRepository;
 
 @Service
+@RequiredArgsConstructor
 public class ProviderServiceImpl implements IProviderService {
+
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     private ProviderRepository providerRepository;
@@ -27,26 +33,23 @@ public class ProviderServiceImpl implements IProviderService {
 
     @Override
     @Transactional
-    public Provider updateProvider(Provider provider) {
-        Provider providerDB = getProvider(provider.getId());
+    public Provider updateProvider(Provider providerDB, Provider providerReceived) {
         if (providerDB == null) {
             return null;
         }
-        providerDB.setName(provider.getName());
-        providerDB.setMail(provider.getMail());
-        providerDB.setAddres(provider.getAddres());
-        providerDB.setPhone(provider.getPhone());
-        providerDB.setImage(provider.getImage());
-        providerDB.setPassword(provider.getPassword());
-        providerDB.setCategory(provider.getCategory());
-        providerDB.setSalary(provider.getSalary());
+        providerDB.setName(providerReceived.getName());
+        providerDB.setMail(providerReceived.getMail());
+        providerDB.setAddres(providerReceived.getAddres());
+        providerDB.setPhone(providerReceived.getPhone());
+        providerDB.setImage(providerReceived.getImage());
+        providerDB.setPassword(passwordEncoder.encode(providerReceived.getPassword()));
         return providerRepository.save(providerDB);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    public Provider deleteUser(Long id) {
+    public Provider deleteProvider(Long id) {
         Provider providerDB = getProvider(id);
         if (providerDB == null) {
             return null;

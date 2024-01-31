@@ -11,7 +11,7 @@ public interface IClientService {
     public List<Client> listAllClient();
     public Long countBy();
 
-    public Client updateClient(Client client);
+    public Client updateClient(Client clientDB, Client clientReceived);
 
     public Client deleteClient(Long id);
 

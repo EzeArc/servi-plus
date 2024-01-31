@@ -13,6 +13,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import lombok.RequiredArgsConstructor;
+import serviplus.sp_back.jwt.JwtFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -44,8 +45,7 @@ public class SecurityConfig {
 
     private RequestMatcher privateEndpoints(){
         return new OrRequestMatcher(
-            new AntPathRequestMatcher("/user/**"),
-            new AntPathRequestMatcher("/provider/**")
+            new AntPathRequestMatcher("/user/**")
         );
     }
 }

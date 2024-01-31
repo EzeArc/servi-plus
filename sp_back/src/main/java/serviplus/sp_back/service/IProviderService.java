@@ -12,7 +12,7 @@ public interface IProviderService {
 
     public Long countBy();
 
-    public Provider updateProvider(Provider provider);
+    public Provider updateProvider(Provider providerDB, Provider providerReceived);
 
-    public Provider deleteUser(Long id);
+    public Provider deleteProvider(Long id);
 }

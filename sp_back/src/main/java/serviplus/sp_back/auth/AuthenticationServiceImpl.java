@@ -1,19 +1,17 @@
-package serviplus.sp_back.service;
+package serviplus.sp_back.auth;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.var;
-import serviplus.sp_back.config.JwtService;
-import serviplus.sp_back.controller.models.AuthenticationRequest;
-import serviplus.sp_back.controller.models.AuthenticationResponse;
-import serviplus.sp_back.entity.Category;
 import serviplus.sp_back.entity.Client;
 import serviplus.sp_back.entity.Provider;
 import serviplus.sp_back.enums.Role;
+import serviplus.sp_back.jwt.JwtService;
 import serviplus.sp_back.repository.ClientRepository;
 import serviplus.sp_back.repository.ProviderRepository;
 
@@ -28,7 +26,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public AuthenticationResponse registerClient(Client clientRequest) {
+    public AuthResponse registerClient(Client clientRequest) {
         Client clientRegister = Client.builder()
                 .name(clientRequest.getName())
                 .mail(clientRequest.getMail())
@@ -41,11 +39,11 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
         clientRepository.save(clientRegister);
         var jwtToken = jwtService.generateToken(clientRegister);
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        return AuthResponse.builder().token(jwtToken).build();
     }
 
     @Override
-    public AuthenticationResponse registerProvider(Provider providerRequest) {
+    public AuthResponse registerProvider(Provider providerRequest) {
         Provider providerRegister = new Provider();
                 providerRegister.setName(providerRequest.getName());
                 providerRegister.setMail(providerRequest.getMail());
@@ -59,25 +57,15 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
                 providerRegister.setRol(Role.PROVIDER);
                 providerRepository.save(providerRegister);
         var jwtToken = jwtService.generateToken(providerRegister);
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        return AuthResponse.builder().token(jwtToken).build();
     }
 
     @Override
-    public AuthenticationResponse authenticateClient(AuthenticationRequest request) {
+    public AuthResponse authenticateLogin(LoginRequest loginRequest) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getMail(), request.getPassword()));
-        var user = clientRepository.findByMail(request.getMail()).orElseThrow();
+                new UsernamePasswordAuthenticationToken(loginRequest.getMail(), loginRequest.getPassword()));
+        UserDetails user = clientRepository.findByMail(loginRequest.getMail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        return AuthResponse.builder().token(jwtToken).build();
     }
-
-    @Override
-    public AuthenticationResponse authenticateProvider(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getMail(), request.getPassword()));
-        var user = providerRepository.findByMail(request.getMail()).orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder().token(jwtToken).build();
-    }
-
 }

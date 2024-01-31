@@ -1,4 +1,4 @@
-package serviplus.sp_back.config;
+package serviplus.sp_back.jwt;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -11,10 +11,13 @@ import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
+
+    private static final String SECRET_KEY = "586E3272357538782F413F4428472B4B6250655368566B597033733676397924";
 
     public String generateToken(UserDetails userDetails){
         return generateToken(new HashMap<>(), userDetails);
@@ -47,7 +50,8 @@ public class JwtService {
     }
 
     public Key getSigningKey() {
-        return Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        byte[] keyBytes=Decoders.BASE64.decode(SECRET_KEY);
+       return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {

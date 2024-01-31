@@ -35,22 +35,22 @@ public class ClientController {
 
 
     @PutMapping("/client/{id}")
-    public ResponseEntity<Client> updateClient(@PathVariable Integer id, @RequestBody Client clientReceived,
-                                               @AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails == null) {
-            // El usuario no está autenticado
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
-
-        Client clientDB = clientServiceImpl.getClient(clientReceived.getId());
+    public Client updateClient(@PathVariable Long id, @RequestBody Client clientReceived) {
+        // Verifica si el cliente existe antes de intentar actualizar
+        Client clientDB = clientServiceImpl.getClient(id);
+    
         if (clientDB == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Client not found with id: " + id);
         }
-
-        // Puedes acceder a userDetails.getUsername() para obtener el nombre de usuario del usuario autenticado
-        // Realiza la lógica de actualización aquí
-        return ResponseEntity.ok(clientServiceImpl.updateClient(clientDB));
+    
+        // Llamada al servicio para realizar la actualización y obtener el cliente actualizado
+        Client updatedClient = clientServiceImpl.updateClient(clientDB, clientReceived);
+    
+        // Puedes retornar el cliente actualizado si es necesario
+        return updatedClient;
     }
+    
+
 
     @GetMapping("/listClients")
     public List<Client> listAllClient() {

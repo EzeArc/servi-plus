@@ -3,14 +3,20 @@ package serviplus.sp_back.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
 import serviplus.sp_back.entity.Client;
 import serviplus.sp_back.repository.ClientRepository;
 
 @Service
+@RequiredArgsConstructor
 public class ClientServiceImpl implements IClientService {
 
+    private final PasswordEncoder passwordEncoder;
+    
     @Autowired
     private ClientRepository clientRepository;
 
@@ -27,17 +33,22 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     @Transactional
-    public Client updateClient(Client client) {
-        Client clientDB = getClient(client.getId());
+    public Client updateClient(Client clientDB, Client clientReceived) {
+        // Verifica nuevamente si el cliente existe, aunque debería haberse comprobado
+        // en el controlador
         if (clientDB == null) {
-            return null;
+            return null; // O lanza una excepción si lo prefieres
         }
-        clientDB.setName(client.getName());
-        clientDB.setMail(client.getMail());
-        clientDB.setAddres(client.getAddres());
-        clientDB.setPhone(client.getPhone());
-        clientDB.setImage(client.getImage());
-        clientDB.setPassword(client.getPassword());
+
+        // Actualiza los campos del cliente de la base de datos con los datos recibidos
+        clientDB.setName(clientReceived.getName());
+        clientDB.setMail(clientReceived.getMail());
+        clientDB.setAddres(clientReceived.getAddres());
+        clientDB.setPhone(clientReceived.getPhone());
+        clientDB.setImage(clientReceived.getImage());
+        clientDB.setPassword(passwordEncoder.encode(clientReceived.getPassword()));
+
+        // Guarda el cliente actualizado en la base de datos
         return clientRepository.save(clientDB);
     }
 

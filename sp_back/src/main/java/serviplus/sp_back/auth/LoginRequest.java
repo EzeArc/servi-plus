@@ -1,4 +1,4 @@
-package serviplus.sp_back.controller.models;
+package serviplus.sp_back.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationResponse {
+public class LoginRequest {
 
-    private String token;
+    private String mail;
+    private String password;
 }

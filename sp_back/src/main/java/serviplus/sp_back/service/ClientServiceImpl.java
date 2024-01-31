@@ -1,20 +1,10 @@
 package serviplus.sp_back.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import jakarta.servlet.http.HttpSession;
 import serviplus.sp_back.entity.Client;
 import serviplus.sp_back.repository.ClientRepository;
 
@@ -33,13 +23,6 @@ public class ClientServiceImpl implements IClientService {
     @Override
     public List<Client> listAllClient() {
         return clientRepository.findAll();
-    }
-
-    @Override
-    @Transactional
-    public Client createClient(Client client) {
-        client.setState(false);
-        return clientRepository.save(client);
     }
 
     @Override
@@ -75,18 +58,4 @@ public class ClientServiceImpl implements IClientService {
         return clientRepository.countBy();
     }
 
-    @Override
-    public UserDetails loadUserByMail(String mail) throws UsernameNotFoundException {
-        Client clientDB = clientRepository.findByMail(mail).orElse(null);
-        if (clientDB == null) {
-            throw new UsernameNotFoundException("Usuario no encontrado con email: " + mail);
-        }
-        List<GrantedAuthority> permission = new ArrayList<>();
-        GrantedAuthority clientPermission = new SimpleGrantedAuthority("ROLE_" + clientDB.getRol().toString());
-        permission.add(clientPermission);
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        HttpSession session = attr.getRequest().getSession(true);
-        session.setAttribute("clientSession", clientDB);
-        return new User(clientDB.getMail(), clientDB.getPassword(), permission);
-    }
 }

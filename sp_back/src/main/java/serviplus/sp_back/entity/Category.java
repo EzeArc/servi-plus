@@ -24,6 +24,5 @@ public class Category {
     private String name;
     private Boolean status;
     @OneToOne
-    @NotNull
     private Image image;
 }

@@ -10,24 +10,35 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import serviplus.sp_back.controller.models.AuthenticationRequest;
 import serviplus.sp_back.controller.models.AuthenticationResponse;
-import serviplus.sp_back.controller.models.RegisterRequest;
+import serviplus.sp_back.entity.Client;
+import serviplus.sp_back.entity.Provider;
 import serviplus.sp_back.service.AuthenticationServiceImpl;
 
 @RestController
-@RequestMapping("/api/authentication")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
     @Autowired
     private AuthenticationServiceImpl authenticationService;
 
-    @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register (@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(authenticationService.register(request));
+    @PostMapping("/registerClient")
+    public ResponseEntity<AuthenticationResponse> registerClient (@RequestBody Client clientRequest) {
+        return ResponseEntity.ok(authenticationService.registerClient(clientRequest));
     }
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate (@RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(authenticationService.authenticate(request));
+    @PostMapping("/registerProvider")
+    public ResponseEntity<AuthenticationResponse> registerProvider (@RequestBody Provider providerRequest) {
+        return ResponseEntity.ok(authenticationService.registerProvider(providerRequest));
+    }
+
+    @PostMapping("/authenticateClient")
+    public ResponseEntity<AuthenticationResponse> authenticateClient (@RequestBody AuthenticationRequest request) {
+        return ResponseEntity.ok(authenticationService.authenticateClient(request));
+    }
+
+    @PostMapping("/authenticateProvider")
+    public ResponseEntity<AuthenticationResponse> authenticateProvider (@RequestBody AuthenticationRequest request) {
+        return ResponseEntity.ok(authenticationService.authenticateProvider(request));
     }
 }

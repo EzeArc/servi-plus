@@ -1,21 +1,11 @@
 package serviplus.sp_back.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import jakarta.servlet.http.HttpSession;
 import serviplus.sp_back.entity.Provider;
 import serviplus.sp_back.repository.ProviderRepository;
 
@@ -33,13 +23,6 @@ public class ProviderServiceImpl implements IProviderService {
     @Override
     public List<Provider> listAllProvider() {
         return providerRepository.findAll();
-    }
-
-    @Override
-    @Transactional
-    public Provider createProvider(Provider provider) {
-        provider.setState(false);
-        return providerRepository.save(provider);
     }
 
     @Override
@@ -77,18 +60,4 @@ public class ProviderServiceImpl implements IProviderService {
         return providerRepository.count();
     }
 
-        @Override
-    public UserDetails loadUserByMail(String mail) throws UsernameNotFoundException {
-        Provider providerDB = providerRepository.findByMail(mail);
-        if (providerDB == null) {
-            throw new UsernameNotFoundException("Usuario no encontrado con email: " + mail);
-        }
-        List<GrantedAuthority> permission = new ArrayList<>();
-        GrantedAuthority providerPermission = new SimpleGrantedAuthority("ROLE_" + providerDB.getRol().toString());
-        permission.add(providerPermission);
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        HttpSession session = attr.getRequest().getSession(true);
-        session.setAttribute("providerSession", providerDB);
-        return new User(providerDB.getMail(), providerDB.getPassword(), permission);
-    }
 }

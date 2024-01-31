@@ -10,46 +10,72 @@ import lombok.var;
 import serviplus.sp_back.config.JwtService;
 import serviplus.sp_back.controller.models.AuthenticationRequest;
 import serviplus.sp_back.controller.models.AuthenticationResponse;
-import serviplus.sp_back.controller.models.RegisterRequest;
+import serviplus.sp_back.entity.Category;
 import serviplus.sp_back.entity.Client;
+import serviplus.sp_back.entity.Provider;
 import serviplus.sp_back.enums.Role;
 import serviplus.sp_back.repository.ClientRepository;
+import serviplus.sp_back.repository.ProviderRepository;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements IAuthenticationService {
 
     private final ClientRepository clientRepository;
+    private final ProviderRepository providerRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public AuthenticationResponse register(RegisterRequest request) {
-        // Convertir el String a Role
-        Role requestRole = Role.valueOf(request.getRol());
-    
-        var user = Client.builder()
-                .name(request.getName())
-                .mail(request.getMail())
-                .addres(request.getAddres())
-                .phone(request.getPhone())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .rol(requestRole) // Asignar el Role convertido desde la solicitud
+    public AuthenticationResponse registerClient(Client clientRequest) {
+        Client clientRegister = Client.builder()
+                .name(clientRequest.getName())
+                .mail(clientRequest.getMail())
+                .addres(clientRequest.getAddres())
+                .phone(clientRequest.getPhone())
+                .state(false)
+                .password(passwordEncoder.encode(clientRequest.getPassword()))
+                .rol(Role.USER)
                 .build();
-    
-        clientRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+
+        clientRepository.save(clientRegister);
+        var jwtToken = jwtService.generateToken(clientRegister);
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
-    
-    
 
     @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse registerProvider(Provider providerRequest) {
+        Provider providerRegister = new Provider();
+                providerRegister.setName(providerRequest.getName());
+                providerRegister.setMail(providerRequest.getMail());
+                providerRegister.setAddres(providerRequest.getAddres());
+                providerRegister.setPhone(providerRequest.getPhone());
+                providerRegister.setCategory(providerRequest.getCategory());
+                providerRegister.setSalary(providerRequest.getSalary());
+                providerRegister.setImage(providerRequest.getImage());
+                providerRegister.setState(false);
+                providerRegister.setPassword(passwordEncoder.encode(providerRequest.getPassword()));
+                providerRegister.setRol(Role.PROVIDER);
+                providerRepository.save(providerRegister);
+        var jwtToken = jwtService.generateToken(providerRegister);
+        return AuthenticationResponse.builder().token(jwtToken).build();
+    }
+
+    @Override
+    public AuthenticationResponse authenticateClient(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getMail(), request.getPassword()));
         var user = clientRepository.findByMail(request.getMail()).orElseThrow();
+        var jwtToken = jwtService.generateToken(user);
+        return AuthenticationResponse.builder().token(jwtToken).build();
+    }
+
+    @Override
+    public AuthenticationResponse authenticateProvider(AuthenticationRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getMail(), request.getPassword()));
+        var user = providerRepository.findByMail(request.getMail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder().token(jwtToken).build();
     }

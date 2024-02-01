@@ -32,32 +32,44 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     @Transactional
-    public Category createCategory(Category category) {
-        category.setStatus(false);
-        return categoryRepository.save(category);
+    public Category createCategory(Category categoryReceived) {
+        Category categoryDB = new Category();
+        categoryDB.setName(categoryReceived.getName());
+        categoryDB.setImage(categoryReceived.getImage());
+        categoryDB.setStatus(false);
+        return categoryRepository.save(categoryDB);
     }
 
     @Override
     @Transactional
-    public Category updateCategory(Category category) {
-        Category categoryDB = getCategory(category.getId());
-        if (categoryDB == null) {
-            return null;
+    public Category updateCategory(Category categoryDB, Category categoryReceived) {
+        try {
+            if (categoryDB == null) {
+                throw new Exception("Category not found: " + categoryDB);
+            }
+            categoryDB.setName(categoryReceived.getName());
+            categoryDB.setImage(categoryReceived.getImage());
+            return categoryRepository.save(categoryDB);
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating category", e);
         }
-        categoryDB.setName(category.getName());
-        categoryDB.setImage(category.getImage());
-        return categoryRepository.save(categoryDB);
+
     }
 
     @Override
     @Transactional
     public Category deleteCategory(Long id) {
-        Category categoryDB = getCategory(id);
-        if (categoryDB == null) {
-            return null;
+        try {
+            Category categoryDB = getCategory(id);
+            if (categoryDB == null) {
+                throw new Exception("Category not found with id: " + id);
+            }
+            categoryDB.setStatus(true);
+            return categoryRepository.save(categoryDB);
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting category", e);
         }
-        categoryDB.setStatus(true);
-        return categoryRepository.save(categoryDB);
+
     }
 
 }

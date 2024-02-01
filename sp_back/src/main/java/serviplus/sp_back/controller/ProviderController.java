@@ -27,19 +27,23 @@ public class ProviderController {
     @Autowired
     private ProviderServiceImpl providerServiceImpl;
 
-    @GetMapping("/listJobsActive")
+    @GetMapping("/listJobsToFinish")
     public List<Job> listAllJobToFinish() {
         return jobServiceImpl.listAllJobToFinish();
     }
 
     @PutMapping("/provider/{id}")
     public Provider updateprovider(@PathVariable Long id, @RequestBody Provider providerReceived) {
-        Provider providerDB = providerServiceImpl.getProvider(id);
+        try {
+            Provider providerDB = providerServiceImpl.getProvider(id);
+            if (providerDB == null) {
+                throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Provider not found with id: " + id);
+            }
+            Provider updatedProvider = providerServiceImpl.updateProvider(providerDB, providerReceived);
+            return updatedProvider;
 
-        if (providerDB == null) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Provider not found with id: " + id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating provider: " + e.getMessage(), e);
         }
-        Provider updatedProvider = providerServiceImpl.updateProvider(providerDB, providerReceived);
-        return updatedProvider;
     }
 }

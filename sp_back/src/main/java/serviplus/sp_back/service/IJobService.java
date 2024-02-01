@@ -21,7 +21,7 @@ public interface IJobService {
     
     public List<Job> listAllJobToFinish();
 
-    public Job createJob(Job job);
+    public Job createJob(Long idProvider, Long idClient);
 
     public Job updateJobStatus(Long id);
 

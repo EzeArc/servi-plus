@@ -3,14 +3,17 @@ package serviplus.sp_back.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 
 import serviplus.sp_back.entity.Admin;
 import serviplus.sp_back.entity.Category;
@@ -48,19 +51,29 @@ public class AdminController {
         return providerServiceImpl.listAllProvider();
     }
 
-    @GetMapping("/listProviders")
+    @GetMapping("/listJobs")
     public List<Job> listAllJob() {
         return jobServiceImpl.listAllJob();
     }
 
     @PostMapping("/category")
-    public Category createCategory(Category category) {
+    public Category createCategory(@RequestBody Category category) {
         return categoryServiceImpl.createCategory(category);
     }
 
     @PutMapping("/category/{id}")
-    public Category updateCategory(Category category) {
-        return categoryServiceImpl.updateCategory(category);
+    public Category updateCategory(@PathVariable Long id, @RequestBody Category categoryReceived) {
+        try {
+            Category categoryDB = categoryServiceImpl.getCategory(id);
+            if (categoryDB == null) {
+                throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Category not found with id: " + id);
+            }
+            Category updatedCategory = categoryServiceImpl.updateCategory(categoryDB, categoryReceived);
+            return updatedCategory;
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating category: " + e.getMessage(), e);
+        }
+
     }
 
     @PatchMapping("/category/{id}")
@@ -97,5 +110,4 @@ public class AdminController {
     public Client changeRoletoAdmin(@PathVariable Long id) {
         return adminServiceImpl.changeRoleToAdmin(id);
     }
-
 }

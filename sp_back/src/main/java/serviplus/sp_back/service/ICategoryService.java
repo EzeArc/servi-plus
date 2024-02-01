@@ -2,6 +2,8 @@ package serviplus.sp_back.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import serviplus.sp_back.entity.Category;
 
 public interface ICategoryService {
@@ -12,9 +14,9 @@ public interface ICategoryService {
     
     public List<Category> listAllCategoryActive();
 
-    public Category createCategory(Category categoryReceived);
+    public Category createCategory(Category categoryReceived, MultipartFile imageReceived);
 
-    public Category updateCategory(Category categoryDB, Category categoryReceived);
+    public Category updateCategory(Category categoryReceived, MultipartFile imageReceived, Long idImage);
 
     public Category deleteCategory(Long id);
 }

@@ -1,12 +1,15 @@
 package serviplus.sp_back.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import serviplus.sp_back.entity.Category;
+import serviplus.sp_back.entity.Image;
 import serviplus.sp_back.repository.CategoryRepository;
 
 @Service
@@ -14,6 +17,8 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private ImageServiceImpl imageServiceImpl;
 
     @Override
     public Category getCategory(Long id) {
@@ -32,28 +37,43 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     @Transactional
-    public Category createCategory(Category categoryReceived) {
-        Category categoryDB = new Category();
-        categoryDB.setName(categoryReceived.getName());
-        categoryDB.setImage(categoryReceived.getImage());
-        categoryDB.setStatus(false);
-        return categoryRepository.save(categoryDB);
+    public Category createCategory(Category categoryReceived, MultipartFile imageReceived) {
+        try {
+            if (imageReceived != null && !imageReceived.isEmpty()) {
+                Category categoryDB = new Category();
+                categoryDB.setName(categoryReceived.getName());
+                Image imageCategory = imageServiceImpl.saveImage(imageReceived);
+                categoryDB.setImage(imageCategory);
+                categoryDB.setStatus(false);
+                return categoryRepository.save(categoryDB);
+            } else {
+                throw new IllegalArgumentException("La imagen recibida es nula o está vacía.");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error al guardar la imagen durante la creación de la categoría", e);
+        }
     }
 
     @Override
     @Transactional
-    public Category updateCategory(Category categoryDB, Category categoryReceived) {
+    public Category updateCategory(Category categoryReceived, MultipartFile imageReceived, Long idImage) {
         try {
-            if (categoryDB == null) {
-                throw new Exception("Category not found: " + categoryDB);
-            }
-            categoryDB.setName(categoryReceived.getName());
-            categoryDB.setImage(categoryReceived.getImage());
-            return categoryRepository.save(categoryDB);
-        } catch (Exception e) {
-            throw new RuntimeException("Error updating category", e);
-        }
+            Optional<Category> optionalCategory = categoryRepository.findById(categoryReceived.getId());
 
+            if (optionalCategory.isPresent()) {
+                Category categoryUpdated = optionalCategory.get();
+                categoryUpdated.setName(categoryReceived.getName());
+
+                Image imageUpdated = imageServiceImpl.updateImage(imageReceived, idImage);
+                categoryUpdated.setImage(imageUpdated);
+
+                return categoryRepository.save(categoryUpdated);
+            } else {
+                throw new IllegalArgumentException("No se encontró la categoría con ID: " + categoryReceived.getId());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error al actualizar la categoría", e);
+        }
     }
 
     @Override

@@ -10,6 +10,8 @@ public interface IProviderService {
 
     public List<Provider> listAllProvider();
 
+    public List<Provider> listAllProviderActive();
+
     public Long countBy();
 
     public Provider updateProvider(Provider providerDB, Provider providerReceived);

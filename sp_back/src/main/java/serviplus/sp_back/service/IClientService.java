@@ -9,6 +9,7 @@ public interface IClientService {
     public Client getClient(Long id);
 
     public List<Client> listAllClient();
+
     public Long countBy();
 
     public Client updateClient(Client clientDB, Client clientReceived);

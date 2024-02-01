@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
+
+import serviplus.sp_back.entity.Job;
 import serviplus.sp_back.entity.Provider;
+import serviplus.sp_back.service.JobServiceImpl;
 import serviplus.sp_back.service.ProviderServiceImpl;
 
 @RestController
@@ -20,7 +23,14 @@ import serviplus.sp_back.service.ProviderServiceImpl;
 public class ProviderController {
 
     @Autowired
+    private JobServiceImpl jobServiceImpl;
+    @Autowired
     private ProviderServiceImpl providerServiceImpl;
+
+    @GetMapping("/listJobsActive")
+    public List<Job> listAllJobToFinish() {
+        return jobServiceImpl.listAllJobToFinish();
+    }
 
     @PutMapping("/provider/{id}")
     public Provider updateprovider(@PathVariable Long id, @RequestBody Provider providerReceived) {
@@ -32,10 +42,4 @@ public class ProviderController {
         Provider updatedProvider = providerServiceImpl.updateProvider(providerDB, providerReceived);
         return updatedProvider;
     }
-
-    @GetMapping("/listProviders")
-    public List<Provider> listAllProvider() {
-        return providerServiceImpl.listAllProvider();
-    }
-
 }

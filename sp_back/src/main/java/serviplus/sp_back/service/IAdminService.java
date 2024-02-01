@@ -15,5 +15,5 @@ public interface IAdminService {
 
     public Admin updateAdmin(Admin adminDB, Admin adminReceived);
 
-    public Admin deleteAdmin(Long id);
+    public Admin updateAdminStatus(Long id);
 }

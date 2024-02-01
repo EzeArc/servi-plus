@@ -9,6 +9,8 @@ public interface ICategoryService {
     public Category getCategory(Long id);
 
     public List<Category> listAllCategory();
+    
+    public List<Category> listAllCategoryActive();
 
     public Category createCategory(Category category);
 

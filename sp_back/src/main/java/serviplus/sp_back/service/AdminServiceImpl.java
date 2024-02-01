@@ -43,28 +43,21 @@ public class AdminServiceImpl implements IAdminService {
     @Override
     @Transactional
     public Admin updateAdmin(Admin adminDB, Admin adminReceived) {
-        // Verifica nuevamente si el cliente existe, aunque debería haberse comprobado
-        // en el controlador
         if (adminDB == null) {
-            return null; // O lanza una excepción si lo prefieres
+            return null;
         }
-
-        // Actualiza los campos del cliente de la base de datos con los datos recibidos
         adminDB.setName(adminReceived.getName());
         adminDB.setMail(adminReceived.getMail());
         adminDB.setAddress(adminReceived.getAddress());
         adminDB.setPhone(adminReceived.getPhone());
         adminDB.setImage(adminReceived.getImage());
         adminDB.setPassword(passwordEncoder.encode(adminReceived.getPassword()));
-
-        // Guarda el cliente actualizado en la base de datos
-        return clientRepository.save(adminDB);
+        return adminRepository.save(adminDB);
     }
-
 
     @Override
     @Transactional
-    public Admin deleteAdmin(Long id) {
+    public Admin updateAdminStatus(Long id) {
         Admin adminDB = getAdmin(id);
         if (adminDB == null) {
             return null;

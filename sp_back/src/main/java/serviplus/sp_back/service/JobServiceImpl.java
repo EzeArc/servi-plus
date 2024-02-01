@@ -1,15 +1,15 @@
 package serviplus.sp_back.service;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import serviplus.sp_back.entity.Category;
+import serviplus.sp_back.entity.Client;
 import serviplus.sp_back.entity.Job;
 import serviplus.sp_back.entity.Provider;
-import serviplus.sp_back.entity.Client;
 import serviplus.sp_back.repository.JobRepository;
 
 @Service
@@ -42,8 +42,8 @@ public class JobServiceImpl implements IJobService {
 
     @Override
     @Transactional
-    public Job updateJob(Job job) {
-        Job jobDB = getJob(job.getId());
+    public Job updateJobStatus(Long id) {
+        Job jobDB = getJob(id);
         if (jobDB == null) {
             return null;
         }
@@ -53,7 +53,6 @@ public class JobServiceImpl implements IJobService {
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
     public Job deleteJob(Long id) {
         Job jobDB = getJob(id);
         if (jobDB == null) {
@@ -74,13 +73,18 @@ public class JobServiceImpl implements IJobService {
     }
 
     @Override
-    public Long countByAllJob() {
-        return jobRepository.countBy();
+    public List<Job> listAllJobToCalificate() {
+        return jobRepository.findByJobStatusAndStatus(true, false);
     }
 
     @Override
-    public List<Job> listAllJobToCalificate() {
-        return jobRepository.findByJobStatusAndStatus(true, false);
+    public List<Job> listAllJobToFinish() {
+        return jobRepository.findByJobStatusAndStatus(false, false);
+    }
+
+    @Override
+    public Long countByAllJob() {
+        return jobRepository.countBy();
     }
 
 }

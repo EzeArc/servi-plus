@@ -3,7 +3,6 @@ package serviplus.sp_back.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +26,11 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Override
+    public List<Category> listAllCategoryActive() {
+        return categoryRepository.findByStatus(false);
+    }
+
+    @Override
     @Transactional
     public Category createCategory(Category category) {
         category.setStatus(false);
@@ -47,7 +51,6 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
     public Category deleteCategory(Long id) {
         Category categoryDB = getCategory(id);
         if (categoryDB == null) {

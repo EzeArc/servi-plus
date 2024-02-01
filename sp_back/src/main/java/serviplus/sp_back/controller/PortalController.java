@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import serviplus.sp_back.entity.Category;
 import serviplus.sp_back.service.CategoryServiceImpl;
+import serviplus.sp_back.service.ClientServiceImpl;
+import serviplus.sp_back.service.JobServiceImpl;
+import serviplus.sp_back.service.ProviderServiceImpl;
 
 @RestController
 @RequestMapping("/sevi-plus")
@@ -17,10 +20,30 @@ import serviplus.sp_back.service.CategoryServiceImpl;
 public class PortalController {
     @Autowired
     private CategoryServiceImpl categoryServiceImpl;
+    @Autowired
+    private ClientServiceImpl clientServiceImpl;
+    @Autowired
+    private ProviderServiceImpl providerServiceImpl;
+    @Autowired
+    private JobServiceImpl jobServiceImpl;
 
     @GetMapping("/categories")
     public List<Category> getCategories() {
-        var categories = categoryServiceImpl.listAllCategory();
-        return categories;
+       return categoryServiceImpl.listAllCategoryActive();
+    }
+
+    @GetMapping("/totalUsers")
+    public Long getCountTotalClients() {
+       return clientServiceImpl.countBy();
+    }
+
+    @GetMapping("/totalProviders")
+    public Long getCountTotalProviders() {
+       return providerServiceImpl.countBy();
+    }
+
+    @GetMapping("/totalJobs")
+    public Long getCountTotalJobs() {
+       return jobServiceImpl.countByAllJob();
     }
 }

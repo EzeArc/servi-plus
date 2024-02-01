@@ -1,5 +1,7 @@
 package serviplus.sp_back.service;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
 import serviplus.sp_back.entity.Provider;
 import serviplus.sp_back.repository.ProviderRepository;
 
@@ -48,18 +49,22 @@ public class ProviderServiceImpl implements IProviderService {
     @Override
     @Transactional
     public Provider updateProviderStatus(Long id) {
-        Provider providerDB = getProvider(id); 
+        Provider providerDB = getProvider(id);
         if (providerDB == null) {
             return null;
-        }   
+        }
         providerDB.setState(true);
         return providerRepository.save(providerDB);
     }
-    
 
     @Override
     public Long countBy() {
         return providerRepository.count();
+    }
+
+    @Override
+    public List<Provider> listAllProviderActive() {
+        return providerRepository.findByState(false);
     }
 
 }

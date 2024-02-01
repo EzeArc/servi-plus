@@ -18,10 +18,12 @@ public interface IJobService {
     public List<Job> listAllJobByProvider(Provider provider);
 
     public List<Job> listAllJobToCalificate();
+    
+    public List<Job> listAllJobToFinish();
 
     public Job createJob(Job job);
 
-    public Job updateJob(Job job);
+    public Job updateJobStatus(Long id);
 
     public Job deleteJob(Long id);
 }

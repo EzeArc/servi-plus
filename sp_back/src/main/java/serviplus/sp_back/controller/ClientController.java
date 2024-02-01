@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -53,18 +54,21 @@ public class ClientController {
     }
 
     @PostMapping("/createJobContract")
-    public Job createJobContract(@RequestBody Job job) {
-        return jobServiceImpl.createJob(job);
+    public Job createJobContract(@RequestParam Long idProvider, @RequestParam Long idClient) {
+        return jobServiceImpl.createJob(idProvider, idClient);
     }
 
     @PutMapping("/client/{id}")
     public Client updateClient(@PathVariable Long id, @RequestBody Client clientReceived) {
-        Client clientDB = clientServiceImpl.getClient(id);
-        if (clientDB == null) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Client not found with id: " + id);
+        try {
+            Client clientDB = clientServiceImpl.getClient(id);
+            if (clientDB == null) {
+                throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Client not found with id: " + id);
+            }
+            Client updatedClient = clientServiceImpl.updateClient(clientDB, clientReceived);
+            return updatedClient;
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating client: " + e.getMessage(), e);
         }
-        Client updatedClient = clientServiceImpl.updateClient(clientDB, clientReceived);
-        return updatedClient;
     }
-
 }

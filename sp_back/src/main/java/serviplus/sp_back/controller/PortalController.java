@@ -15,7 +15,7 @@ import serviplus.sp_back.service.JobServiceImpl;
 import serviplus.sp_back.service.ProviderServiceImpl;
 
 @RestController
-@RequestMapping("/sevi-plus")
+@RequestMapping("/servi-plus")
 @CrossOrigin(value = "http://localhost:4321")
 public class PortalController {
     @Autowired

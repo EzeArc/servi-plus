@@ -35,16 +35,20 @@ public class ClientServiceImpl implements IClientService {
     @Override
     @Transactional
     public Client updateClient(Client clientDB, Client clientReceived) {
-        if (clientDB == null) {
-            return null;
+        try {
+            if (clientDB == null) {
+                throw new Exception("Client not found: " + clientDB);
+            }
+            clientDB.setName(clientReceived.getName());
+            clientDB.setMail(clientReceived.getMail());
+            clientDB.setAddress(clientReceived.getAddress());
+            clientDB.setPhone(clientReceived.getPhone());
+            clientDB.setImage(clientReceived.getImage());
+            clientDB.setPassword(passwordEncoder.encode(clientReceived.getPassword()));
+            return clientRepository.save(clientDB);
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating client", e);
         }
-        clientDB.setName(clientReceived.getName());
-        clientDB.setMail(clientReceived.getMail());
-        clientDB.setAddress(clientReceived.getAddress());
-        clientDB.setPhone(clientReceived.getPhone());
-        clientDB.setImage(clientReceived.getImage());
-        clientDB.setPassword(passwordEncoder.encode(clientReceived.getPassword()));
-        return clientRepository.save(clientDB);
     }
 
     @Override

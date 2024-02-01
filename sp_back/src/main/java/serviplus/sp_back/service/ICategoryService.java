@@ -12,9 +12,9 @@ public interface ICategoryService {
     
     public List<Category> listAllCategoryActive();
 
-    public Category createCategory(Category category);
+    public Category createCategory(Category categoryReceived);
 
-    public Category updateCategory(Category category);
+    public Category updateCategory(Category categoryDB, Category categoryReceived);
 
     public Category deleteCategory(Long id);
 }

@@ -1,28 +1,135 @@
 ---
-const GALLERY_IMAGES = [];
+import "photoswipe/style.css";
+import Button from "@/components/Button.astro";
+import galleryInfo from "@/data/meta-gallery.json";
+const offset = 10;
+const i = 0;
+const GALLERY = [`/public/assets/prov-img${i + 1}.webp`];
+const photos = galleryInfo[0].slice(0, offset);
 ---
 
-<div class="grid grid-cols-3" id="gallery">
-  {
-    Array.from({ length: 9 }).map((_, i) => (
-      <a
-        href={`assets/prov-img${i + 1}.webp`}
-        data-pswp-width="1875"
-        data-pswp-height="2500"
-        target="_blank"
-      >
-        <img src={`assets/prov-img${i + 1}.webp`} alt="" />
-      </a>
-    ))
-  }
-</div>
+<section class="max-w-8xl mx-auto py-20 px-20">
+  <h2
+    class="mx-auto mb-8 text-center text-3xl lg:text-6xl font-semibold tracking-wide"
+  >
+    Encuentra tu provedor
+  </h2>
+  <p class="text-center text-2xl">Aca va el nombre del provedor</p>
 
-<script>
+  <masonry-layout
+    maxcolwidth="600"
+    class="grid grid-cols-3 lg:mx-auto mx-4 py-20 gap-3"
+    id="gallery"
+  >
+    {
+      photos.map(({ height, width }, i) => (
+        <a
+          class="group rounded-xl hover:scale-105 hover:contrast-[110%] transition-all relative"
+          href={`/assets/prov-img${i + 1}.webp`}
+          target="_blank"
+          data-cropped="true"
+          data-pswp-width={width}
+          data-pswp-height={height}
+        >
+          <img
+            class="rounded-xl object-cover w-full h-auto"
+            loading="lazy"
+            src={`/assets/prov-img${i + 1}.webp`}
+            alt=""
+          />
+          <img
+            class="blur-md opacity-0 group-hover:opacity-100 absolute inset-0 transition contrast-150 -z-10 object-cover"
+            loading="lazy"
+            src={`/assets/prov-img${i + 1}.webp`}
+            alt="Imagen con efecto blur para hacer de sombra de una fotografía de los premios ESLAND"
+          />
+        </a>
+      ))
+    }
+  </masonry-layout>
+
+  <div class="text-center mx-auto">
+    <Button id="load-more" url="#">Descúbrelas todas</Button>
+  </div>
+</section>
+
+<script itemscope>
   import PhotoSwipeLightbox from "photoswipe/lightbox";
-  const lightbox = new PhotoSwipeLightbox({
-    gallery: "#mgallery",
-    children: "a",
-    pswpModule: () => import("photoswipe"),
+  import "@appnest/masonry-layout";
+
+  document.addEventListener("astro:page-load", () => {
+    const lightbox = new PhotoSwipeLightbox({
+      gallery: "#gallery",
+      children: "a",
+      pswpModule: () => import("photoswipe"),
+    });
+
+    lightbox.init();
   });
-  lightbox.init();
 </script>
+
+<script define:vars={{ photos, offset }}>
+  document.addEventListener("astro:page-load", () => {
+    const $button = document.querySelector("#load-more");
+    // clone first element of gallery
+    const $first = document.querySelector("#gallery a:first-child");
+
+    $button?.addEventListener("click", async (e) => {
+      $button.remove();
+      e.preventDefault();
+      const res = await fetch("/api/gallery.json?edition=1&offset=9");
+      const images = await res.json();
+
+      const html = images
+        .map((img, index) => {
+          const imgIndex = index + offset;
+          const $clone = $first?.cloneNode(true);
+
+          $clone.setAttribute("data-pswp-width", img.width);
+          $clone.setAttribute("data-pswp-height", img.height);
+          $clone.setAttribute("href", `/assets/prov-img${i + 1}.webp`);
+          $clone.classList.add("animate-fade-up");
+          $clone.classList.add("animate-delay-300");
+          $clone.classList.add("opacity-0");
+          $clone
+            .querySelector("img:first-child")
+            .setAttribute("src", `/assets/prov-img${i + 1}.webp`);
+          $clone
+            .querySelector("img:last-child")
+            .setAttribute("src", `/assets/prov-img${i + 1}.webp`);
+
+          return $clone?.outerHTML;
+        })
+        .join("");
+
+      document.querySelector("#gallery")?.insertAdjacentHTML("beforeend", html);
+      document.querySelector("masonry-layout").scheduleLayout();
+    });
+  });
+</script>
+
+<style is:global>
+  .pswp {
+    --pswp-bg: #00012a;
+  }
+
+  #gallery a {
+    cursor: zoom-in;
+    animation: fade-up-images linear both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 20%;
+  }
+
+  @keyframes fade-up-images {
+    0% {
+      opacity: 0;
+      translate: 0 50px;
+      scale: 0.7;
+    }
+    100% {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+    }
+  }
+</style>

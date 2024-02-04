@@ -5,5 +5,9 @@
     "INTRO_TITLE_AFTER_BR": "a ServiPluss",
     "INTRO_DESCRIPTION_1": "Conectando a la Comunidad de Chacras de Coria con Profesionales Locales",
     "INTRO_DESCRIPTION_2": "ServiPluss es una aplicación web innovadora diseñada para <strong>facilitar la búsqueda y contratación</strong> de servicios locales en Chacras de Coria, Mendoza. Con el objetivo de crear un puente efectivo entre los residentes y los proveedores de servicios.",
-    "INTRO_DESCRIPTION_3":"ServiPluss se ha convertido en la plataforma preferida para <strong>satisfacer una amplia gama de necesidades</strong>."
+    "INTRO_DESCRIPTION_3":"ServiPluss se ha convertido en la plataforma preferida para <strong>satisfacer una amplia gama de necesidades</strong>.",
+    "HEADER": {
+        "LOGO": "Volver a la página de inicio de ServiPluss"
+    },
+    "HEADER_BUTTON": "Log in"
 }

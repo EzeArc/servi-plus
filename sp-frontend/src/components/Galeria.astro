@@ -2,6 +2,7 @@
 import "photoswipe/style.css";
 import Button from "@/components/Button.astro";
 import galleryInfo from "@/data/meta-gallery.json";
+import "@/components/styles/Galeria.css";
 const offset = 10;
 const i = 0;
 const GALLERY = [`/public/assets/prov-img${i + 1}.webp`];
@@ -107,29 +108,3 @@ const photos = galleryInfo[0].slice(0, offset);
     });
   });
 </script>
-
-<style is:global>
-  .pswp {
-    --pswp-bg: #00012a;
-  }
-
-  #gallery a {
-    cursor: zoom-in;
-    animation: fade-up-images linear both;
-    animation-timeline: view();
-    animation-range: entry 10% cover 20%;
-  }
-
-  @keyframes fade-up-images {
-    0% {
-      opacity: 0;
-      translate: 0 50px;
-      scale: 0.7;
-    }
-    100% {
-      opacity: 1;
-      translate: 0 0;
-      scale: 1;
-    }
-  }
-</style>

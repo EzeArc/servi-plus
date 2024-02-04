@@ -1,53 +1,24 @@
-<section class="flex justify-center w-full">
-  <div class="logos flex flex-row gap-10 py-3">
-    <div class="logos-slide">
-      <span class="flex flex-col items-center">
-        <img src="./assets/categoryIcons/carpintero.png" />
-        <p>carpintero</p>
-      </span>
-    </div>
-    <div class="logos-slide">
-      <span class="flex flex-col items-center">
-        <img src="./assets/categoryIcons/fontanero.png" />
-        <p>Plomero</p>
-      </span>
-    </div>
-    <div class="logos-slide text-center">
-      <span class="flex flex-col items-center">
-        <img src="./assets/categoryIcons/jardinero.png" />
-        <p>Jardinero</p>
-      </span>
-    </div>
-    <div class="logos-slide text-center">
-      <span class="flex flex-col items-center">
-        <img src="./assets/categoryIcons/decorador.png" />
-        <p>Decorador</p>
-      </span>
-    </div>
-    <div class="logos-slide text-center">
-      <span class="flex flex-col items-center">
-        <img src="./assets/categoryIcons/mecanico.png" />
-        <p>Mecanico</p>
-      </span>
-    </div>
-    <div class="logos-slide text-center">
-      <span class="flex flex-col items-center">
-        <img src="./assets/categoryIcons/veterinario.png" />
-        <p>Veterinario</p>
-      </span>
-    </div>
-    <div class="logos-slide text-center">
-      <span class="flex flex-col items-center">
-        <img src="./assets/categoryIcons/ingeniero.png" />
-        <p>Ingeniero</p>
-      </span>
-    </div>
-    <div class="logos-slide text-center">
-      <span class="flex flex-col items-center">
-        <img src="./assets/categoryIcons/icons8-painter-64.png" />
-        <p>Pintor</p>
-      </span>
-    </div>
+---
+import apiRoutes from "../api.js";
+
+const data = await fetch(`${apiRoutes.serviPlus}/categories`).then((response) =>
+  response.json()
+);
+const listCategory = data;
+---
+
+<section class="flex justify-center w-full bg-[#1a2149] text-white">
+  <div class="logos flex flex-row gap-24 py-3 w-max">
+    {
+      listCategory.map((category) => (
+        <div class="logos-slide">
+          <span class="flex flex-col items-center">
+            <img src={category.image} />
+            <h3>{category.name}</h3>
+          </span>
+        </div>
+      ))
+    }
   </div>
 </section>
 
@@ -94,7 +65,7 @@
 
   .logos-slide {
     display: inline-block;
-    animation: 15s slide infinite linear;
+    animation: 6s slide infinite linear;
   }
 
   .logos-slide img {

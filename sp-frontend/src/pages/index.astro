@@ -1,29 +1,21 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import HeroContainer from "../components/HeroContainer.astro";
-import CategorySlider from "../components/CategorySlider.astro";
+//import CategorySlider from "../components/CategorySlider.astro";
+//import Metrics from "../components/Metrics.astro";
+import Video from "../components/Video.astro";
+import Intro from "../components/Intro.astro";
+import Bento from "../components/Bento.astro";
 ---
 
 <Layout
-  title="ServiPluss . Servicios para el hogar."
+  title="ServiPluss. Servicios para el hogar."
   description="Si estas buscando servicios para el hogar en mendoza, ¡No dudes en visitarnos!"
 >
+  <Video />
   <main class="">
-    <section class="max-h-[550px] shadow-md overflow-hidden">
-      <HeroContainer />
-    </section>
-    <section class="text-center mt-5">
-      <div class="mt-[30px] py-3">
-        <h1 class="text-6xl text-white font-bold">
-          Conoce nuestras categorías
-        </h1>
-        <span>
-          <CategorySlider />
-        </span>
-        <div>
-          <span></span>
-        </div>
-      </div>
-    </section>
+    <!-- <CategorySlider /> -->
+    <Intro />
+    <Bento />
+    <!-- <Metrics /> -->
   </main>
 </Layout>

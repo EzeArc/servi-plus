@@ -1,0 +1,21 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import CategorySlider from "../../components/CategorySlider.astro";
+import Metrics from "../../components/Metrics.astro";
+import Video from "../../components/Video.astro";
+import Intro from "../../components/Intro.astro";
+import Bento from "../../components/Bento.astro";
+---
+
+<Layout
+  title="ServiPluss. Servicios para el hogar."
+  description="Si estas buscando servicios para el hogar en mendoza, ¡No dudes en visitarnos!"
+>
+  <Video />
+  <main class="">
+    <CategorySlider />
+    <Intro />
+    <Bento />
+    <Metrics />
+  </main>
+</Layout>

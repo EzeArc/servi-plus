@@ -1,0 +1,25 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import HeroContainer from "../HeroContainer.astro";
+import { getI18N } from "@/i18n";
+import Button from "../Button.astro";
+//import Numeros from "@/components/Numeros";
+import Galeria from "../Galeria.astro";
+const { currentLocale } = Astro;
+const i18n = getI18N({ currentLocale });
+---
+
+<Layout title="Servicio" description="Servicio">
+  <HeroContainer img="/contactanos.webp">
+    <h1 class="text-6xl font-tomaso mb-10 tracking-wider">
+      Encuentra tu servicio
+    </h1>
+    <Button class="animate-fade-up" url="http://localhost:4321/#servicios">
+      ver servicios
+    </Button>
+  </HeroContainer>
+  <main>
+    <!-- <Numeros client:only /> -->
+    <Galeria />
+  </main>
+</Layout>

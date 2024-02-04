@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.multipart.MultipartFile;
 
 import serviplus.sp_back.entity.Admin;
 import serviplus.sp_back.entity.Category;
@@ -57,24 +60,37 @@ public class AdminController {
     }
 
     @PostMapping("/category")
-    public Category createCategory(@RequestBody Category category) {
-        return categoryServiceImpl.createCategory(category);
+    public ResponseEntity<Category> createCategory(@RequestBody Category category, MultipartFile imageCategory) {
+        Category createdCategory = categoryServiceImpl.createCategory(category, imageCategory);
+
+        if (createdCategory != null) {
+            return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("/category/{id}")
-    public Category updateCategory(@PathVariable Long id, @RequestBody Category categoryReceived) {
+    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category categoryReceived, @RequestBody MultipartFile imageReceived, @RequestParam Long idImage) {
         try {
             Category categoryDB = categoryServiceImpl.getCategory(id);
+    
             if (categoryDB == null) {
                 throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Category not found with id: " + id);
             }
-            Category updatedCategory = categoryServiceImpl.updateCategory(categoryDB, categoryReceived);
-            return updatedCategory;
+    
+            Category updatedCategory = categoryServiceImpl.updateCategory(categoryReceived, imageReceived, idImage);
+    
+            if (updatedCategory != null) {
+                return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         } catch (Exception e) {
-            throw new RuntimeException("Error updating category: " + e.getMessage(), e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
+    
 
     @PatchMapping("/category/{id}")
     public Category deleteCategory(@PathVariable Long id) {

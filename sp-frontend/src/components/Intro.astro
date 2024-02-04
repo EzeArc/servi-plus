@@ -1,0 +1,19 @@
+---
+import ServiLogo from "../icons/ServiLogo.astro";
+import { getI18N } from "@/i18n";
+
+const { currentLocale } = Astro;
+const i18n = getI18N({ currentLocale });
+---
+
+<section class="text-xl text-left px-20 max-w-[60ch] text-pretty mx-auto my-24">
+  <ServiLogo class="w-24 m-auto mb-10" alt="Logo de ServiPluss" />
+  <h1
+    class="text-5xl font-semibold text-center text-wrap mx-auto mb-10 tracking-wide"
+  >
+    {i18n.INTRO_TITLE}<br />{i18n.INTRO_TITLE_AFTER_BR}
+  </h1>
+  <p set:html={i18n.INTRO_DESCRIPTION_1} />
+  <p set:html={i18n.INTRO_DESCRIPTION_2} />
+  <p set:html={i18n.INTRO_DESCRIPTION_3} />
+</section>

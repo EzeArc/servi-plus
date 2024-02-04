@@ -1,0 +1,21 @@
+---
+import ServiLogo from "@/icons/ServiLogo.astro";
+---
+
+<header id="header-nav" class="fixed top-0 w-full px-6 py-4 z-50">
+  <div class="max-w-7xl mx-auto flex items-center justify-between gap-16">
+    <a href="/" class="relative z-10">
+      <ServiLogo
+        class="absolute w-16 m-auto blur-sm opacity-0 transition-opacity duration-300 hover:opacity-100"
+      />
+      <ServiLogo class="w-16" />
+    </a>
+    <nav
+      id="header-menu"
+      class="fixed w-full h-dvh inset-0 bg-[#151a36]/90 text-2xl flex flex-col items-center justify-center gap-8 -translate-y-full transition-transform duration-300 target:translate-y-0 md:static md:h-[initial] md:bg-[initial] md:text-xl md:flex-row md:translate-y-[initial]"
+    >
+      <a class="text__glowing" href="/info/">Información</a>
+      <a class="text__glowing" href="/servicios/">Servicios</a>
+    </nav>
+  </div>
+</header>

@@ -1,8 +1,9 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import react from "@astrojs/react";
-
 import preact from "@astrojs/preact";
+
+import node from "@astrojs/node";
 
 // https://astro.build/config
 export default defineConfig({
@@ -14,5 +15,8 @@ export default defineConfig({
       prefixDefaultLocale: false
     }
   },
-  output: "hybrid"
+  output: "hybrid",
+  adapter: node({
+    mode: "standalone"
+  })
 });

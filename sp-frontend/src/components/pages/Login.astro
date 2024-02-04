@@ -1,8 +1,10 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import HeroContainer from "../HeroContainer.astro";
+import LoginForm from "@/components/LoginForm";
 ---
 
 <Layout title="Información" description="Información">
-  <HeroContainer img="/barrio1.webp" />
+  <HeroContainer img="/assets/user-perfil.jpg" />
+  <LoginForm onLogin={LoginForm} />
 </Layout>

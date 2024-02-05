@@ -1,6 +1,6 @@
 ---
 import ServiLogo from "@/icons/ServiLogo.astro";
-import Button from "@/components/Button.astro";
+import Button from "@/components/Button.jsx";
 import LanguageSelector from "@/components/LanguageSelector.astro";
 import HeaderLink from "@/components/HeaderLink.astro";
 import MenuIcon from "@/icons/Menu.astro";
@@ -12,6 +12,7 @@ import {
   useTranslations,
   useTranslatedPath,
 } from "../i18n/utils";
+import { any } from "astro/zod";
 
 const { currentLocale } = Astro;
 const i18n = getI18N({ currentLocale });
@@ -49,8 +50,8 @@ const translatePath = useTranslatedPath(lang);
       </HeaderLink>
       <LanguageSelector />
       <Button
-        class="md:py-2 md:ml-auto md:text-base lg:text-base"
-        url="loginAndRegister"
+        className="md:py-2 md:ml-auto md:text-base lg:text-base"
+        url="http://localhost:4321/#servicios"
       >
         {i18n.HEADER_BUTTON}
       </Button>

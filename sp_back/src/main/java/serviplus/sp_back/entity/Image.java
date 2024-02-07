@@ -25,7 +25,6 @@ public class Image {
     private Boolean state;
 
     @Lob
-    @Column(length = 10485760) // Tamaño máximo de 10 MB
     @Basic(fetch = FetchType.LAZY)
     private byte[] content;
 }

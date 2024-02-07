@@ -7,7 +7,6 @@ import Numeros from "@/components/Numeros.jsx";
 import Galeria from "../Galeria.jsx";
 const { currentLocale } = Astro;
 const i18n = getI18N({ currentLocale });
-const edicion = "2";
 ---
 
 <Layout title="Servicio" description="Servicio">
@@ -25,7 +24,7 @@ const edicion = "2";
     </Button>
   </HeroContainer>
   <main>
-    <Galeria i18n={i18n} edicion={edicion} />
-    <Numeros i18n={i18n} edicion={edicion} />
+    <Galeria i18n={i18n} client:only="preact" />
+    <Numeros i18n={i18n} metricas=" " client:only="preact" />
   </main>
 </Layout>

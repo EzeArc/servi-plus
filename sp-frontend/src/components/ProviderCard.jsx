@@ -1,12 +1,9 @@
 export default function StreamerCard({
   name,
   foto,
-  provider,
   category,
-  streamers,
   salary,
   position,
-  background,
 }) {
   return (
     <div
@@ -27,7 +24,6 @@ export default function StreamerCard({
         </p>
         <p class="mt-5 flex flex-col mb-3 font-normal text-gray-700 dark:text-gray-400 uppercase">
           <strong>Servicio: {category}</strong>
-          <strong>Streamers: {streamers}</strong>
           <strong>Salario: {salary}</strong>
         </p>
       </div>

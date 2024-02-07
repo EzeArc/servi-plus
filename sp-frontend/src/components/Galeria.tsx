@@ -1,5 +1,5 @@
 import 'photoswipe/style.css';
-import editionsInfo from '@/data/meta-gallery.json';
+import providerInfo from '@/data/meta-gallery.json';
 import Button from '@/components/Button.tsx';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import '@/components/styles/Galeria.css';
@@ -13,17 +13,19 @@ declare global {
 	}
 }
 
-export default function Galeria({
+export default async function Galeria({
 	i18n,
-	edicion,
 }: {
 	i18n: any;
-	edicion: string;
 }) {
 	const offset = 10;
 
-	const edictionIndex = Number(edicion) - 1;
-	const photos = editionsInfo[edictionIndex].slice(0, offset);
+	const dataProviders = await fetch('http://localhost:8080/user/listProvidersActive').then(
+		(response) => response.json()
+	  );
+
+	const providerIndex = Number(dataProviders) - 1;
+	const photos = providerInfo[providerIndex].slice(0, offset);
 	const first = useRef<HTMLAnchorElement>(null);
 	const [isExpanded, setIsExpanded] = useState(false);
 
@@ -46,7 +48,7 @@ export default function Galeria({
 	const handleLoadMore = async (e: MouseEvent) => {
 		e.preventDefault();
 
-		const res = await fetch('/api/gallery.json?edition=1&offset=9');
+		const res = await fetch('http://localhost:8080/user/listProvidersActive.json?image=1&offset=9');
 		const images = await res.json();
 
 		const html = images
@@ -60,7 +62,7 @@ export default function Galeria({
 				clone.setAttribute('data-pswp-height', img.height);
 				clone.setAttribute(
 					'href',
-					`/archivo-page/${edicion}/gallery/img-${imgIndex}.webp`
+					`/assets/${dataProviders}-img-${imgIndex}.webp`
 				);
 				clone.classList.add('animate-fade-up');
 				clone.classList.add('animate-delay-300');
@@ -69,13 +71,13 @@ export default function Galeria({
 					.querySelector('img:first-child')
 					?.setAttribute(
 						'src',
-						`/archivo-page/${edicion}/gallery/thumbnails/img-${imgIndex}.webp`
+						`/assets/${dataProviders}-img-${imgIndex}.webp`
 					);
 				clone
 					.querySelector('img:last-child')
 					?.setAttribute(
 						'src',
-						`/archivo-page/${edicion}/gallery/thumbnails/img-${imgIndex}.webp`
+						`/assets/${dataProviders}-img-${imgIndex}.webp`
 					);
 
 				return clone?.outerHTML;
@@ -105,7 +107,7 @@ export default function Galeria({
 				{photos.map(({ height, width }, i) => (
 					<a
 						class='group rounded-xl hover:scale-105 hover:contrast-[110%] transition-all relative'
-						href={`/archivo-page/${edicion}/gallery/img-${
+						href={`/assets/${dataProviders}-img-${
 							i + 1
 						}.webp`}
 						target='_blank'
@@ -117,7 +119,7 @@ export default function Galeria({
 						<img
 							class='rounded-xl object-cover w-full h-auto'
 							loading='lazy'
-							src={`/archivo-page/${edicion}/gallery/thumbnails/img-${
+							src={`/assets/${dataProviders}-img-${
 								i + 1
 							}.webp`}
 							alt='Fotografía de los premios ESLAND'
@@ -125,7 +127,7 @@ export default function Galeria({
 						<img
 							class='blur-md opacity-0 group-hover:opacity-100 absolute inset-0 transition contrast-150 -z-10 object-cover'
 							loading='lazy'
-							src={`/archivo-page/${edicion}/gallery/thumbnails/img-${
+							src={`/assets/${dataProviders}-img-${
 								i + 1
 							}.webp`}
 							alt='Imagen con efecto blur para hacer de sombra de una fotografía de los premios ESLAND'
@@ -143,8 +145,4 @@ export default function Galeria({
 			</div>
 		</section>
 	);
-}
-
-{
-
 }

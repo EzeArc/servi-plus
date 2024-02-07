@@ -16,7 +16,7 @@ import serviplus.sp_back.entity.Provider;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@CrossOrigin(value = "http://localhost:4321/loginAndRegister")
+@CrossOrigin(value = "http://localhost:4321/")
 public class AuthenticationController {
 
     @Autowired

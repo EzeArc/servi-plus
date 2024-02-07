@@ -31,7 +31,7 @@ import serviplus.sp_back.service.ProviderServiceImpl;
 
 @RestController
 @RequestMapping("/admin")
-@CrossOrigin(value = "http://localhost:4321/admin")
+@CrossOrigin(value = "http://localhost:4321")
 public class AdminController {
     @Autowired
     private ProviderServiceImpl providerServiceImpl;

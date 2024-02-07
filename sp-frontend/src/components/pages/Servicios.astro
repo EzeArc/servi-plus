@@ -2,24 +2,29 @@
 import Layout from "@/layouts/Layout.astro";
 import HeroContainer from "../HeroContainer.astro";
 import { getI18N } from "@/i18n";
-import Button from "../Button.astro";
-//import Numeros from "@/components/Numeros";
-import Galeria from "../Galeria.astro";
+import Button from "../Button.jsx";
+import Numeros from "@/components/Numeros.jsx";
+import Galeria from "../Galeria.jsx";
 const { currentLocale } = Astro;
 const i18n = getI18N({ currentLocale });
 ---
 
 <Layout title="Servicio" description="Servicio">
-  <HeroContainer img="/contactanos.webp">
-    <h1 class="text-6xl font-tomaso mb-10 tracking-wider">
+  <HeroContainer img="/contacto.webp">
+    <h1
+      class="lg:text-6xl text-4xl text-center uppercase mb-20 tracking-widest"
+    >
       Encuentra tu servicio
     </h1>
-    <Button class="animate-fade-up" url="http://localhost:4321/#servicios">
-      ver servicios
+    <Button
+      className="animate-fade-up uppercase"
+      url="https://www.youtube.com/watch?v=1YmpPrqKP-g"
+    >
+      {i18n.ARCHIVO.HERO_BUTTON}
     </Button>
   </HeroContainer>
   <main>
-    <!-- <Numeros client:only /> -->
-    <Galeria />
+    <Galeria i18n={i18n} client:only="preact" />
+    <Numeros i18n={i18n} metricas=" " client:only="preact" />
   </main>
 </Layout>

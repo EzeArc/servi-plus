@@ -1,0 +1,147 @@
+---
+
+---
+
+<form
+  class="max-w-sm mx-auto"
+  id="register-form"
+  method="POST"
+  action="http://localhost:8080/api/auth/register"
+>
+  <div class="mb-5">
+    <label
+      for="mail"
+      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+      >Your email</label
+    >
+    <input
+      type="email"
+      id="mail"
+      name="mail"
+      required
+      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      placeholder="name@flowbite.com"
+    />
+  </div>
+  <div class="mb-5">
+    <label
+      for="name"
+      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+      >Your name</label
+    >
+    <input
+      name="name"
+      type="text"
+      required
+      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      placeholder="name"
+    />
+  </div>
+  <div class="mb-5">
+    <label
+      for="phone"
+      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+      >Your phone</label
+    >
+    <input
+      name="phone"
+      type="tel"
+      required
+      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      placeholder="22145647"
+    />
+  </div>
+  <div class="mb-5">
+    <label
+      for="address"
+      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+      >Your address</label
+    >
+    <input
+      name="address"
+      type="text"
+      required
+      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      placeholder="22145647"
+    />
+  </div>
+  <!-- <label
+    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+    for="user_avatar">Upload file</label
+  >
+  <input
+    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+    aria-describedby="user_avatar_help"
+    id="user_avatar"
+    type="file"
+  />
+  <div
+    class="mt-1 text-sm text-gray-500 dark:text-gray-300"
+    id="user_avatar_help"
+  >
+    A profile picture is useful to confirm your are logged into your account
+  </div> -->
+  <div class="mb-5">
+    <label
+      for="password"
+      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+      >Your password</label
+    >
+    <input
+      name="password"
+      type="password"
+      id="password"
+      required
+      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      required
+    />
+  </div>
+  <div class="flex items-start mb-5">
+    <div class="flex items-center h-5">
+      <input
+        id="remember"
+        type="checkbox"
+        value=""
+        class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
+        required
+      />
+    </div>
+    <label
+      for="remember"
+      class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+      >Remember me</label
+    >
+  </div>
+  <button
+    type="submit"
+    value="Registrarse"
+    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    >Registrarse</button
+  >
+</form>
+
+<script>
+  import AuthService from "../api/services/auth.js";
+  const authService = new AuthService();
+  document
+    .getElementById("register-form")
+    .addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.target as HTMLFormElement;
+      const elements = form.elements as HTMLFormControlsCollection;
+      const data = {
+        name: (elements.namedItem("name") as HTMLInputElement).value,
+        mail: (elements.namedItem("mail") as HTMLInputElement).value,
+        phone: (elements.namedItem("phone") as HTMLInputElement).value,
+        address: (elements.namedItem("address") as HTMLInputElement).value,
+        password: (elements.namedItem("password") as HTMLInputElement).value,
+      };
+      const success = await authService.register(data);
+      if (success) {
+        // Redirigir al usuario a la página de inicio de sesión
+        window.location.href = "/login";
+      } else {
+        // Mostrar un mensaje de error
+      }
+    });
+</script>

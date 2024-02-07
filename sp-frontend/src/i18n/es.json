@@ -5,5 +5,35 @@
     "INTRO_TITLE_AFTER_BR": "a ServiPluss",
     "INTRO_DESCRIPTION_1": "Conectando a la Comunidad de Chacras de Coria con Profesionales Locales",
     "INTRO_DESCRIPTION_2": "ServiPluss es una aplicación web innovadora diseñada para <strong>facilitar la búsqueda y contratación</strong> de servicios locales en Chacras de Coria, Mendoza. Con el objetivo de crear un puente efectivo entre los residentes y los proveedores de servicios.",
-    "INTRO_DESCRIPTION_3":"ServiPluss se ha convertido en la plataforma preferida para <strong>satisfacer una amplia gama de necesidades</strong>."
+    "INTRO_DESCRIPTION_3":"ServiPluss se ha convertido en la plataforma preferida para <strong>satisfacer una amplia gama de necesidades</strong>.",
+    "HEADER": {
+        "LOGO": "Volver a la página de inicio de ServiPluss"
+    },
+    "HEADER_BUTTON": "Log in",
+    "SEO": {
+		"ARCHIVO_TITLE": "Archivo de las ediciones anteriores - Premios ESLAND 2024",
+		"ARCHIVO_DESCRIPTION": "Repasa los mejores momentos de ediciones anteriores",
+		"INFO_TITLE": "Información - Premios ESLAND 2024",
+		"INFO_DESCRIPTION": "Descubre todo lo que necesitas saber sobre los Premios ESLAND 2024 y descarga el Kit de Prensa",
+		"VOTE_TITLE": "Vota por tus creadores de contenido favoritos - Premios ESLAND 2024",
+		"VOTE_DESCRIPTION": "Vota por tus creadores de contenido favoritos de España, Latinoamérica y Andorra",
+		"ERROR_404_TITLE": "404 Página no encontrada - Premios ESLAND 2024",
+		"ERROR_404_DESCRIPTION": "404 Página no encontrada - Premios ESLAND 2024"
+	},
+	"ERROR_404": {
+		"TITLE": "Página no encontrada",
+		"BACK_HOMEPAGE_BTN": "Volver a la página de inicio"
+	},"ARCHIVO": {
+		"HERO_TITLE": "Ediciones anteriores",
+		"HERO_BUTTON": "Revive la última gala",
+		"COUNTER_TITLE": "Los ESLAND en números",
+		"COUNTER_VIEWS": "de visualizaciones",
+		"COUNTER_NEWS": "noticias en prensa",
+		"COUNTER_MEDIA": "en medios ganados"
+	},
+	"GALLERY": {
+		"TITLE": "GALERÍA",
+		"TEXT": "Algunos de los mejores momentos de la gala que pasarán a la historia.",
+		"LOAD_MORE": "Descúbrelas todas"
+	}
 }

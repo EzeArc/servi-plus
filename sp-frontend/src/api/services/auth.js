@@ -17,15 +17,31 @@ export default class AuthService {
     }
   }
 
-  async register(data) {
+  async register(data, headers) {
     const response = await fetch(
       "http://localhost:8080/api/auth/registerClient",
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        headers: headers,
+        body: data,
       }
     );
+    return response.ok;
+  }
+
+  async registerProvider(data, headers) {
+    const formData = new FormData();
+    formData.append("file", data.file); // 'file' debe coincidir con el nombre del parámetro en el backend
+
+    const response = await fetch(
+      "http://localhost:8080/api/auth/registerProvider",
+      {
+        method: "POST",
+        headers: headers,
+        body: formData,
+      }
+    );
+
     return response.ok;
   }
 

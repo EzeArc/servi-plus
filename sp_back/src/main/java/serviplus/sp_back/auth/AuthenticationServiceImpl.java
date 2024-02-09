@@ -34,14 +34,14 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
     @Override
     public AuthResponse registerAdmin(Admin adminRequest) {
-        Admin adminRegister =new Admin();
-                adminRegister.setName(adminRequest.getName());
-                adminRegister.setMail(adminRequest.getMail());
-                adminRegister.setAddress(adminRequest.getAddress());
-                adminRegister.setPhone(adminRequest.getPhone());
-                adminRegister.setState(false);
-                adminRegister.setPassword(passwordEncoder.encode(adminRequest.getPassword()));
-                adminRegister.setRol(Role.ADMIN);
+        Admin adminRegister = new Admin();
+        adminRegister.setName(adminRequest.getName());
+        adminRegister.setMail(adminRequest.getMail());
+        adminRegister.setAddress(adminRequest.getAddress());
+        adminRegister.setPhone(adminRequest.getPhone());
+        adminRegister.setState(false);
+        adminRegister.setPassword(passwordEncoder.encode(adminRequest.getPassword()));
+        adminRegister.setRol(Role.ADMIN);
 
         adminRepository.save(adminRegister);
         var jwtToken = jwtService.generateToken(adminRegister);
@@ -65,28 +65,28 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         return AuthResponse.builder().token(jwtToken).build();
     }
 
-@Override
-public AuthResponse registerProvider(Provider providerRequest, MultipartFile file) {
-    Provider providerRegister = new Provider();
-    providerRegister.setName(providerRequest.getName());
-    providerRegister.setMail(providerRequest.getMail());
-    providerRegister.setAddress(providerRequest.getAddress());
-    providerRegister.setPhone(providerRequest.getPhone());
-    providerRegister.setCategory(providerRequest.getCategory());
-    providerRegister.setSalary(providerRequest.getSalary());
+    @Override
+    public AuthResponse registerProvider(Provider providerRequest, MultipartFile file) {
+        Provider providerRegister = new Provider();
+        providerRegister.setName(providerRequest.getName());
+        providerRegister.setMail(providerRequest.getMail());
+        providerRegister.setAddress(providerRequest.getAddress());
+        providerRegister.setPhone(providerRequest.getPhone());
+        providerRegister.setCategory(providerRequest.getCategory());
+        providerRegister.setSalary(providerRequest.getSalary());
 
-    // Guarda la imagen y obtén la referencia
-    Image savedImage = imageServiceImpl.saveImage(file);
-    providerRegister.setImage(savedImage);
+        // Guarda la imagen y obtén la referencia
+        Image savedImage = imageServiceImpl.saveImage(file);
+        System.out.println(savedImage);
+        providerRegister.setImage(savedImage);
 
-    providerRegister.setState(false);
-    providerRegister.setPassword(passwordEncoder.encode(providerRequest.getPassword()));
-    providerRegister.setRol(Role.PROVIDER);
-    providerRepository.save(providerRegister);
-    var jwtToken = jwtService.generateToken(providerRegister);
-    return AuthResponse.builder().token(jwtToken).build();
-}
-
+        providerRegister.setState(false);
+        providerRegister.setPassword(passwordEncoder.encode(providerRequest.getPassword()));
+        providerRegister.setRol(Role.PROVIDER);
+        providerRepository.save(providerRegister);
+        var jwtToken = jwtService.generateToken(providerRegister);
+        return AuthResponse.builder().token(jwtToken).build();
+    }
 
     @Override
     public AuthResponse authenticateLogin(LoginRequest loginRequest) {

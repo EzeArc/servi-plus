@@ -3,6 +3,7 @@ package serviplus.sp_back.service;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import serviplus.sp_back.entity.Provider;
+import serviplus.sp_back.entity.ProviderDTO;
 import serviplus.sp_back.repository.ProviderRepository;
 
 @Service
@@ -67,4 +69,27 @@ public class ProviderServiceImpl implements IProviderService {
         return providerRepository.findByState(false);
     }
 
+    public List<ProviderDTO> getAllProvidersWithImagesDTO() {
+        List<Provider> providers = providerRepository.findAll();
+        return providers.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private ProviderDTO mapToDTO(Provider provider) {
+        ProviderDTO dto = new ProviderDTO();
+        dto.setId(provider.getId());
+        dto.setName(provider.getName());
+        dto.setSalary(provider.getSalary());
+        dto.setCategory(provider.getCategory());
+        dto.setRating(provider.getRating());
+
+        if (provider.getImage() != null) {
+            dto.setNameImage(provider.getImage().getName());
+            dto.setMime(provider.getImage().getMime());
+            dto.setContent(provider.getImage().getContent());
+        }
+
+        return dto;
+    }
 }

@@ -25,28 +25,29 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(auth -> auth.requestMatchers(publicEndpoints()).permitAll()
-        .requestMatchers(privateEndpoints()).authenticated()
-        .anyRequest().authenticated())
-        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authenticationProvider(authenticationProvider)
-        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .authorizeHttpRequests(auth -> auth.requestMatchers(publicEndpoints()).permitAll()
+                        // .requestMatchers(privateEndpoints()).authenticated()
+                        .anyRequest().authenticated())
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 
-    private RequestMatcher publicEndpoints(){
+    private RequestMatcher publicEndpoints() {
         return new OrRequestMatcher(
-            new AntPathRequestMatcher("/servi-plus/**"),
-            new AntPathRequestMatcher("/api/auth/**")
-        );
+                new AntPathRequestMatcher("/servi-plus/**"),
+                new AntPathRequestMatcher("/api/auth/**"),
+                new AntPathRequestMatcher("/user/**"),
+                new AntPathRequestMatcher("/admin/**"),
+                new AntPathRequestMatcher("/image/**"));
     }
 
-    private RequestMatcher privateEndpoints(){
+    private RequestMatcher privateEndpoints() {
         return new OrRequestMatcher(
-            new AntPathRequestMatcher("/user/**"),
-            new AntPathRequestMatcher("/admin/**")
-        );
+                new AntPathRequestMatcher("/user/**"),
+                new AntPathRequestMatcher("/admin/**"));
     }
 }

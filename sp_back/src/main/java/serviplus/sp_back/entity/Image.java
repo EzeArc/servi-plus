@@ -26,5 +26,6 @@ public class Image {
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
+    @Column(length = 10485760)
     private byte[] content;
 }

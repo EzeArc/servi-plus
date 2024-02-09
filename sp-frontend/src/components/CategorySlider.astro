@@ -1,10 +1,11 @@
 ---
 import apiRoutes from "../api.js";
 
-const data = await fetch(`${apiRoutes.serviPlus}/categories`).then((response) =>
-  response.json()
-);
+const data = await fetch(
+  `${apiRoutes.serviPlus}/listCategoriesActiveWithImages`
+).then((response) => response.json());
 const listCategory = data;
+console.log(listCategory);
 ---
 
 <section class="flex justify-center w-full bg-[#1a2149] text-white">
@@ -13,7 +14,7 @@ const listCategory = data;
       listCategory.map((category) => (
         <div class="logos-slide">
           <span class="flex flex-col items-center">
-            <img src={category.image} />
+            <img src={`data:image/svg+xml;base64,${category.content}`} />
             <h3>{category.name}</h3>
           </span>
         </div>

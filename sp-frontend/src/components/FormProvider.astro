@@ -80,6 +80,7 @@
       id="file"
       type="file"
       name="file"
+      required
     />
   </div>
   <div class="mb-5">
@@ -194,7 +195,7 @@
           address:
             (document.getElementById("address") as HTMLInputElement)?.value ||
             "",
-          file: (document.getElementById("file") as HTMLInputElement).files[0],
+          file: (document.getElementById("file") as HTMLInputElement).files[0], // Accede al archivo desde el campo de entrada de archivo
           salary:
             (document.getElementById("salary") as HTMLInputElement)?.value ||
             "",
@@ -215,24 +216,9 @@
           return;
         }
 
-        const headers = { "Content-Type": "multipart/form-data" };
-
-        // Crea un objeto FormData y agrega manualmente cada campo
-        const formData = new FormData();
-        formData.append("mail", data.mail);
-        formData.append("name", data.name);
-        formData.append("phone", data.phone);
-        formData.append("address", data.address);
-        formData.append("file", data.file);
-        formData.append("salary", data.salary);
-        formData.append("category", data.category);
-        formData.append("password", data.password);
-        // Agrega otros campos según sea necesario
-
         // Envía los datos del formulario
-        const response = await authService.registerProvider(formData, headers);
-        console.log(formData);
-        console.log(headers);
+        const response = await authService.registerProvider(data);
+
         if (response) {
           console.log("Registro exitoso");
         } else {

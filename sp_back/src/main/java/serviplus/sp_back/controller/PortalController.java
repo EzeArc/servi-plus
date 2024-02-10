@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import serviplus.sp_back.entity.Category;
+import serviplus.sp_back.entity.CategoryDTO;
 import serviplus.sp_back.service.CategoryServiceImpl;
 import serviplus.sp_back.service.ClientServiceImpl;
 import serviplus.sp_back.service.JobServiceImpl;
@@ -18,32 +19,37 @@ import serviplus.sp_back.service.ProviderServiceImpl;
 @RequestMapping("/servi-plus")
 @CrossOrigin(value = "http://localhost:4321")
 public class PortalController {
-    @Autowired
-    private CategoryServiceImpl categoryServiceImpl;
-    @Autowired
-    private ClientServiceImpl clientServiceImpl;
-    @Autowired
-    private ProviderServiceImpl providerServiceImpl;
-    @Autowired
-    private JobServiceImpl jobServiceImpl;
+   @Autowired
+   private CategoryServiceImpl categoryServiceImpl;
+   @Autowired
+   private ClientServiceImpl clientServiceImpl;
+   @Autowired
+   private ProviderServiceImpl providerServiceImpl;
+   @Autowired
+   private JobServiceImpl jobServiceImpl;
 
-    @GetMapping("/categories")
-    public List<Category> getCategories() {
-       return categoryServiceImpl.listAllCategoryActive();
-    }
+   @GetMapping("/categories")
+   public List<Category> getCategories() {
+      return categoryServiceImpl.listAllCategoryActive();
+   }
 
-    @GetMapping("/totalUsers")
-    public Long getCountTotalClients() {
-       return clientServiceImpl.countBy();
-    }
+   @GetMapping("/listCategoriesActiveWithImages")
+   public List<CategoryDTO> listCategoriesWithImages() {
+      return categoryServiceImpl.getAllCategoriesWithImagesDTO();
+   }
 
-    @GetMapping("/totalProviders")
-    public Long getCountTotalProviders() {
-       return providerServiceImpl.countBy();
-    }
+   @GetMapping("/totalUsers")
+   public Long getCountTotalClients() {
+      return clientServiceImpl.countBy();
+   }
 
-    @GetMapping("/totalJobs")
-    public Long getCountTotalJobs() {
-       return jobServiceImpl.countByAllJob();
-    }
+   @GetMapping("/totalProviders")
+   public Long getCountTotalProviders() {
+      return providerServiceImpl.countBy();
+   }
+
+   @GetMapping("/totalJobs")
+   public Long getCountTotalJobs() {
+      return jobServiceImpl.countByAllJob();
+   }
 }

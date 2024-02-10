@@ -2,6 +2,7 @@ package serviplus.sp_back.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import serviplus.sp_back.entity.Category;
+import serviplus.sp_back.entity.CategoryDTO;
 import serviplus.sp_back.entity.Image;
 import serviplus.sp_back.repository.CategoryRepository;
 
@@ -37,12 +39,12 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     @Transactional
-    public Category createCategory(Category categoryReceived, MultipartFile imageReceived) {
+    public Category createCategory(Category categoryReceived, MultipartFile file) {
         try {
-            if (imageReceived != null && !imageReceived.isEmpty()) {
+            if (file != null && !file.isEmpty()) {
                 Category categoryDB = new Category();
                 categoryDB.setName(categoryReceived.getName());
-                Image imageCategory = imageServiceImpl.saveImage(imageReceived);
+                Image imageCategory = imageServiceImpl.saveImage(file);
                 categoryDB.setImage(imageCategory);
                 categoryDB.setStatus(false);
                 return categoryRepository.save(categoryDB);
@@ -90,6 +92,27 @@ public class CategoryServiceImpl implements ICategoryService {
             throw new RuntimeException("Error deleting category", e);
         }
 
+    }
+
+    public List<CategoryDTO> getAllCategoriesWithImagesDTO() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private CategoryDTO mapToDTO(Category category) {
+        CategoryDTO dto = new CategoryDTO();
+        dto.setId(category.getId());
+        dto.setName(category.getName());
+
+        if (category.getImage() != null) {
+            dto.setNameImage(category.getImage().getName());
+            dto.setMime(category.getImage().getMime());
+            dto.setContent(category.getImage().getContent());
+        }
+
+        return dto;
     }
 
 }

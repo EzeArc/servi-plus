@@ -60,27 +60,28 @@ public class AdminController {
     }
 
     @PostMapping("/category")
-    public ResponseEntity<Category> createCategory(@RequestBody Category category, MultipartFile imageCategory) {
-        Category createdCategory = categoryServiceImpl.createCategory(category, imageCategory);
-
-        if (createdCategory != null) {
-            return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<Category> createCategory(Category category, @RequestParam("file") MultipartFile file) {
+        try {
+            return ResponseEntity.ok(categoryServiceImpl.createCategory(category, file));
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Puedes devolver una respuesta de error más específica según tus necesidades.
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
     @PutMapping("/category/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category categoryReceived, @RequestBody MultipartFile imageReceived, @RequestParam Long idImage) {
+    public ResponseEntity<Category> updateCategory(@PathVariable Long id, Category categoryReceived,
+            @RequestParam("file") MultipartFile file, @RequestParam Long idImage) {
         try {
             Category categoryDB = categoryServiceImpl.getCategory(id);
-    
+
             if (categoryDB == null) {
                 throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Category not found with id: " + id);
             }
-    
-            Category updatedCategory = categoryServiceImpl.updateCategory(categoryReceived, imageReceived, idImage);
-    
+
+            Category updatedCategory = categoryServiceImpl.updateCategory(categoryReceived, file, idImage);
+
             if (updatedCategory != null) {
                 return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
             } else {
@@ -90,7 +91,6 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
 
     @PatchMapping("/category/{id}")
     public Category deleteCategory(@PathVariable Long id) {

@@ -1,0 +1,115 @@
+---
+import AuthService from "../api/services/auth.js";
+---
+
+<div class="relative p-4 w-full max-w-md max-h-full">
+  <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+    <div
+      class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
+    >
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+        Actualizar Categoría
+      </h3>
+      <form
+        class="max-w-sm mx-auto"
+        id="updateCategoryForm"
+        method="PUT"
+        enctype="multipart/form-data"
+        action={`http://localhost:8080/admin/category/${categoryData.id}`}
+      >
+        <div class="grid gap-4 mb-4 grid-cols-2">
+          <div class="col-span-2">
+            <label
+              for="nombre"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Nombre
+            </label>
+            <input
+              type="text"
+              name="nombre"
+              id="nombre"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="Nombre de la categoría"
+              value={FormData.name}
+              required
+              readonly
+            />
+          </div>
+          <div class="col-span-2">
+            <label
+              for="imagen"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Imagen
+            </label>
+            <input
+              type="file"
+              name="imagen"
+              id="imagen"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              accept="image/*"
+            />
+          </div>
+        </div>
+        <button
+          type="submit"
+          value="Actualizar"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Actualizar
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  import AuthService from "../api/services/auth.js";
+
+  const authService = new AuthService();
+
+  const categoryData = {
+    id: "... tu valor inicial ...",
+    nombre: "...",
+    imagen: null,
+  };
+
+  document
+    .getElementById("updateCategoryForm")
+    .addEventListener("submit", async function (event) {
+      try {
+        event.preventDefault();
+
+        const data = {
+          nombre: categoryData.nombre,
+          imagen: (document.getElementById("imagen") as HTMLInputElement)
+            .files[0],
+        };
+
+        console.log("Data:", data);
+
+        if (Object.values(data).some((value) => !value)) {
+          console.log("Todos los campos son obligatorios");
+          return;
+        }
+
+        // Utiliza categoryData.id como parte de la URL en la acción del formulario
+        const response = await authService.updateCategory(
+          categoryData.id,
+          data
+        );
+
+        if (response) {
+          console.log("Actualización exitosa");
+          // Puedes redirigir al usuario a otra página o mostrar un mensaje de éxito
+        } else {
+          console.log("Error en la actualización");
+          console.log(response);
+          // Puedes mostrar un mensaje de error al usuario
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    });
+</script>

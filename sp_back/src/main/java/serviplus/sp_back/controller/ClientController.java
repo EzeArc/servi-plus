@@ -6,6 +6,7 @@ import serviplus.sp_back.entity.Category;
 import serviplus.sp_back.entity.Client;
 import serviplus.sp_back.entity.Job;
 import serviplus.sp_back.entity.Provider;
+import serviplus.sp_back.entity.ProviderDTO;
 import serviplus.sp_back.service.CategoryServiceImpl;
 import serviplus.sp_back.service.ClientServiceImpl;
 import serviplus.sp_back.service.JobServiceImpl;
@@ -26,7 +27,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(value = "http://localhost:4321/user")
+@CrossOrigin(value = "http://localhost:4321")
 public class ClientController {
 
     @Autowired
@@ -46,6 +47,11 @@ public class ClientController {
     @GetMapping("/listProvidersActive")
     public List<Provider> listAllProviderActive() {
         return providerServiceImpl.listAllProviderActive();
+    }
+
+    @GetMapping("/listProvidersActiveWithImages")
+    public List<ProviderDTO> listProvidersWithImages() {
+        return providerServiceImpl.getAllProvidersWithImagesDTO();
     }
 
     @GetMapping("/listJobsActive")

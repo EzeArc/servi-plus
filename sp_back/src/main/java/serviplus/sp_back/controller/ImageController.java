@@ -19,7 +19,7 @@ import serviplus.sp_back.service.ClientServiceImpl;
 
 @RestController
 @RequestMapping("/image")
-@CrossOrigin(value = "http://localhost:4321/image")
+@CrossOrigin(value = "http://localhost:4321")
 public class ImageController {
 
     @Autowired

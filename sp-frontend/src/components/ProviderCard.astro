@@ -1,0 +1,37 @@
+---
+import apiRoutes from "@/api";
+
+const dataProviders = await fetch(
+  `${apiRoutes.users}/listProvidersActiveWithImages`
+).then((response) => response.json());
+
+const listProviders = dataProviders;
+console.log(listProviders);
+---
+
+<div>
+  {
+    listProviders.map((provider) => (
+      <div class="max-w-full rounded-lg shadow border-[#0d507a] animate-fade-up">
+        <p class="mx-11 shadow-md absolute text-center rounded-b-lg rounded-t-sm bg-white -mt-[2px] text-black py-2 font-bold font-tomaso size-11">
+          {provider.name}
+        </p>
+        <img
+          class="rounded-t-lg object-cover"
+          src={`data:image/jpeg;base64,${provider.content}`}
+          alt={provider.nameImage}
+          title={provider.nombre}
+        />
+        <div class="p-5">
+          <p class="mb-2 text-xl font-bold tracking-tight dark:text-white uppercase text-balance">
+            {provider.nombre}
+          </p>
+          <p class="mt-5 flex flex-col mb-3 font-normal text-gray-700 dark:text-gray-400 uppercase">
+            <strong>Servicio: {provider.category.name}</strong>
+            <strong>Salario: {provider.salary}</strong>
+          </p>
+        </div>
+      </div>
+    ))
+  }
+</div>
